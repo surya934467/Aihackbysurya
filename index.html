@@ -2,34 +2,176 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THIS IS PRIVATE AI HACK DON'T SHARE </title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'/>
+    <title>GT S2</title>
     <style>
-        * {
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: url('https://i.gifer.com/origin/fd/fdd2726c56e7d9cd95ad83bef3365f38_w200.gif') no-repeat center center fixed;
+            background-size: cover;
+            color: #00ffcc;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            padding: 20px;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
         }
-        html, body {
+
+        #mainApp {
+            max-width: 700px;
+            margin: auto;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
+            border: 2px solid #00ffcc;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(0, 255, 204, 0.6); }
+            to { box-shadow: 0 0 25px rgba(0, 255, 204, 1); }
+        }
+        h1 {
+            text-align: center;
+            color: #00ffcc;
+            font-size: 28px;
+            position: relative;
+            animation: glitch 1s infinite alternate;
+        }
+        .card {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #00ffcc;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
+        }
+
+        .history-table {
             width: 100%;
-            height: 100%;
-            overflow: hidden;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 5px;
+            color: #fff;
         }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+
+        .history-table th, .history-table td {
+            padding: 4px;
+            text-align: center;
+            border-bottom: 1px solid #00ffcc;
         }
+
+        .win { color: #00ff00; font-weight: bold; }
+        .loss { color: #ff3333; font-weight: bold; }
+        .pending { color: #ffcc00; font-weight: bold; }
     </style>
 </head>
 <body>
+    <div id="mainApp">
+        <h1>🚀 SURYA AI S3 🚀</h1>
+        <div class="card">
+            <h4>📅 PERIOD: <span id="currentPeriod">-</span></h4>
+            <h4>📊 RESULT: <span id="currentResult">-</span></h4>
+            <h4>⏳ TIME REMAINING: <span id="timer">--</span></h4>
+        </div>
+        <div class="card">
+            <h4>📜 HISTORY</h4>
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>PERIOD</th>
+                        <th>RESULT</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTable"></tbody>
+            </table>
+        </div>
+    </div>
 
-    <!-- iFrame with sandbox restrictions for security -->
-    <iframe 
-        src="https://ksmod.tksultra.in/login.php" 
-        title="Embedded Page"
-        sandbox="allow-same-origin allow-scripts"
-    ></iframe>
+    <script>
+        function startTimer() {
+            setInterval(() => {
+                let now = new Date();
+                let seconds = now.getSeconds();
+                let remaining = (10 * 60) - ((now.getMinutes() % 10) * 60 + seconds);
+                let minutes = Math.floor(remaining / 60);
+                let secs = remaining % 60;
+                document.getElementById("timer").innerText = `${minutes}m ${secs}s`;
+            }, 1000);
+        }
+        startTimer();
 
+        let historyData = [];
+        let lastFetchedPeriod = null;
+
+        async function fetchGameResult() {
+            try {
+                let response = await fetch("https://api.bdg88zf.com/api/webapi/GetNoaverageEmerdList", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        pageSize: 10,
+                        pageNo: 1,
+                        typeId: 1,
+                        language: 0,
+                        random: "4a0522c6ecd8410496260e686be2a57c",
+                        signature: "334B5E70A0C9B8918B0B15E517E2069C",
+                        timestamp: Math.floor(Date.now() / 1000)
+                    })
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                let data = await response.json();
+                let latestResult = data?.data?.list?.[0];
+                return latestResult ? { period: latestResult.issueNumber, result: latestResult.number } : null;
+            } catch (error) {
+                console.error("Error fetching game result:", error);
+                return null;
+            }
+        }
+
+        function trendAnalysis(history) {
+            let bigCount = history.filter(item => item.result >= 5).length;
+            let smallCount = history.filter(item => item.result < 4).length;
+            return bigCount > smallCount ? "BIG" : "SMALL";
+        }
+
+        async function updatePrediction() {
+            let apiResult = await fetchGameResult();
+            if (apiResult && apiResult.period !== lastFetchedPeriod) {
+                lastFetchedPeriod = apiResult.period;
+                let currentPeriod = (BigInt(apiResult.period) + 1n).toString();
+                let prediction = trendAnalysis(historyData);
+                document.getElementById("currentPeriod").innerText = currentPeriod;
+                document.getElementById("currentResult").innerText = apiResult.result >= 5 ? "BIG" : "SMALL";
+                historyData.unshift({ period: apiResult.period, prediction, result: apiResult.result, status: "Pending" });
+                updateHistory();
+                checkWinLoss(apiResult);
+            }
+        }
+
+        function checkWinLoss(apiResult) {
+            historyData.forEach(item => {
+                if (item.period === apiResult.period) {
+                    let actualResult = apiResult.result >= 4 ? "BIG" : "SMALL";
+                    item.status = (item.prediction === actualResult) ? "WIN" : "LOSS";
+                }
+            });
+            updateHistory();
+        }
+
+        function updateHistory() {
+            let historyTable = document.getElementById("historyTable");
+            historyTable.innerHTML = historyData.map(item => `
+                <tr>
+                    <td>${item.period}</td>
+                    <td>${item.prediction}</td>
+                    <td class="${item.status.toLowerCase()}">${item.status}</td>
+                </tr>`).join('');
+        }
+
+        setInterval(updatePrediction, 3000);
+    </script>
 </body>
 </html>
