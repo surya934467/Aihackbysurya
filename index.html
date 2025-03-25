@@ -1,5 +1,4 @@
-
-     <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'El Messiri', sans-serif; text-align: center; }
-        body { background: url('https://i.ibb.co/LdtcbSLX/74f09d279fb2e94226b2a889cac0a976.jpg') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: white; }
+        body { background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8z-1JziT9I95nLT87w78PRl5kZTFlFGsf1tk83zK-D8gbIU9U_QantDbY&s=10') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: white; }
         .container { width: 90%; max-width: 400px; }
         .box { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); border-radius: 10px; padding: 15px; margin-bottom: 10px; }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
@@ -19,16 +18,16 @@
         .blue { background: rgba(0, 0, 255, 0.3); border: 1px solid blue; }
         .grey { background: rgba(128, 128, 128, 0.3); border: 1px solid grey; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 1.9px; border-bottom: 1px solid white; }
-        .win-text { color: #00ff00; font-weight: bold; }
-        .loss-text { color: #ff0000; font-weight: bold; }
-        .pending-text { color: #ffff00; font-weight: bold; }
+        th, td { padding: 5px; border-bottom: 1px solid white; }
+        .win { color: #00ff00; font-weight: bold; } /* Green for WIN */
+        .loss { color: #ff0000; font-weight: bold; } /* Red for LOSS */
+        .pending { color: #0000ff; font-weight: bold; } /* Blue for Pending */
     </style>
 </head>
 <body>
     <div class="container">
         <div class="box">
-            <h2>KS UPDATED WINGO</h2>
+            <h2>SURYA TKS UPDATED WINGO 1M</h2>
         </div>
         <div class="box">
             <p><b>Period:</b> <span id="currentPeriod">Loading...</span></p>
@@ -50,7 +49,6 @@
                     <tr>
                         <th>Period</th>
                         <th>Prediction</th>
-                        <th>Result</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -63,7 +61,6 @@
         let historyData = [];
         let lastFetchedPeriod = null;
 
-        // Fetch game result from API
         async function fetchGameResult() {
             try {
                 let response = await fetch("https://api.bdg88zf.com/api/webapi/GetNoaverageEmerdList", {
@@ -113,7 +110,7 @@
                 document.getElementById("currentPeriod").innerText = currentPeriod;
                 document.getElementById("prediction").innerText = prediction.type;
 
-                historyData.unshift({ period: currentPeriod, result: apiResult.result, prediction: prediction.type, resultStatus: "Pending" });
+                historyData.unshift({ period: currentPeriod, prediction: prediction.type, result: apiResult.result, resultStatus: "Pending" });
                 updateHistory();
                 checkWinLoss(apiResult);
             }
@@ -150,7 +147,7 @@
 
             historyData.forEach(item => {
                 let row = document.createElement("tr");
-                row.innerHTML = `<td>${item.period}</td><td>${item.prediction}</td><td>${item.result >= 5 ? "BIG" : "SMALL"}</td><td class="${item.resultStatus.toLowerCase()}">${item.resultStatus}</td>`;
+                row.innerHTML = `<td>${item.period}</td><td>${item.prediction}</td><td class="${item.resultStatus.toLowerCase()}">${item.resultStatus}</td>`;
                 historyTable.appendChild(row);
             });
         }
@@ -158,4 +155,4 @@
         setInterval(updatePrediction, 3000);
     </script>
 </body>
-</html>          
+</html>
