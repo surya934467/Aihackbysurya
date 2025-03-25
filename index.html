@@ -1,4 +1,5 @@
- <!DOCTYPE html>
+
+     <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,57 +8,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'El Messiri', sans-serif;
-            text-align: center;
-        }
-        body {
-            background: url('https://i.ibb.co/LdtcbSLX/74f09d279fb2e94226b2a889cac0a976.jpg') no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: white;
-        }
-        .container {
-            width: 90%;
-            max-width: 400px;
-        }
-        .box {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .status-box {
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'El Messiri', sans-serif; text-align: center; }
+        body { background: url('https://i.ibb.co/LdtcbSLX/74f09d279fb2e94226b2a889cac0a976.jpg') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: white; }
+        .container { width: 90%; max-width: 400px; }
+        .box { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); border-radius: 10px; padding: 15px; margin-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+        .status-box { padding: 10px; border-radius: 10px; font-size: 16px; font-weight: bold; }
         .green { background: rgba(0, 255, 0, 0.3); border: 1px solid green; }
         .red { background: rgba(255, 0, 0, 0.3); border: 1px solid red; }
         .blue { background: rgba(0, 0, 255, 0.3); border: 1px solid blue; }
         .grey { background: rgba(128, 128, 128, 0.3); border: 1px solid grey; }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid white;
-        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1.9px; border-bottom: 1px solid white; }
         .win-text { color: #00ff00; font-weight: bold; }
         .loss-text { color: #ff0000; font-weight: bold; }
         .pending-text { color: #ffff00; font-weight: bold; }
@@ -69,79 +31,131 @@
             <h2>KS UPDATED WINGO</h2>
         </div>
         <div class="box">
-            <p><b>Period:</b> <span id="period-number">Loading...</span></p>
-            <p><b>Result:</b> <span id="predicted-result">Loading...</span></p>
+            <p><b>Period:</b> <span id="currentPeriod">Loading...</span></p>
+            <p><b>Prediction:</b> <span id="prediction">Loading...</span></p>
         </div>
         <div class="box">
             <h2>Analysis</h2>
             <div class="grid">
-                <div class="status-box green"><p>WIN Count</p><span id="win-count">0</span></div>
-                <div class="status-box red"><p>Lost Count</p><span id="loss-count">0</span></div>
-                <div class="status-box blue"><p>WIN %</p><span id="win-percentage">0%</span></div>
+                <div class="status-box green"><p>WIN Count</p><span id="totalWins">0</span></div>
+                <div class="status-box red"><p>Lost Count</p><span id="totalLosses">0</span></div>
+                <div class="status-box blue"><p>WIN %</p><span id="accuracy">0%</span></div>
                 <div class="status-box grey"><p>Auto-Reverse</p><span>Active</span></div>
             </div>
         </div>
         <div class="box">
             <h2>History</h2>
-            <table>
+            <table id="historyTable">
                 <thead>
                     <tr>
                         <th>Period</th>
                         <th>Prediction</th>
+                        <th>Result</th>
                         <th>Status</th>
                     </tr>
                 </thead>
-                <tbody id="history-list"></tbody>
+                <tbody id="historyList"></tbody>
             </table>
         </div>
     </div>
+
     <script>
-        let storedHistory = JSON.parse(localStorage.getItem("gameHistory")) || [];
-        async function fetchCurrentGameIssue() {
-            const apiUrl = 'https://api.bdg88zf.com/api/webapi/GetNoaverageEmerdList';
+        let historyData = [];
+        let lastFetchedPeriod = null;
+
+        // Fetch game result from API
+        async function fetchGameResult() {
             try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-                    body: JSON.stringify({ typeId: 1, language: 0 })
+                let response = await fetch("https://api.bdg88zf.com/api/webapi/GetNoaverageEmerdList", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        pageSize: 10,
+                        pageNo: 1,
+                        typeId: 1,
+                        language: 0,
+                        random: "4a0522c6ecd8410496260e686be2a57c",
+                        signature: "334B5E70A0C9B8918B0B15E517E2069C",
+                        timestamp: Math.floor(Date.now() / 1000)
+                    })
                 });
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.code === 0) {
-                        let latestPeriod = data.data.issueNumber;
-                        document.getElementById('period-number').textContent = latestPeriod;
-                        calculateBigSmall(latestPeriod);
-                    }
+
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                let data = await response.json();
+                let latestResult = data?.data?.list?.[0];
+
+                return latestResult ? { period: latestResult.issueNumber, result: latestResult.number } : null;
+            } catch (error) {
+                console.error("Error fetching game result:", error);
+                return null;
+            }
+        }
+
+        function trendAnalysis(history) {
+            let bigCount = history.filter(item => item.result >= 5).length;
+            let smallCount = history.filter(item => item.result < 5).length;
+            return bigCount > smallCount ? "BIG" : "SMALL";
+        }
+
+        function autoPredict() {
+            return { type: trendAnalysis(historyData) };
+        }
+
+        async function updatePrediction() {
+            let apiResult = await fetchGameResult();
+
+            if (apiResult && apiResult.period !== lastFetchedPeriod) {
+                lastFetchedPeriod = apiResult.period;
+                let currentPeriod = (BigInt(apiResult.period) + 1n).toString();
+                let prediction = autoPredict();
+
+                document.getElementById("currentPeriod").innerText = currentPeriod;
+                document.getElementById("prediction").innerText = prediction.type;
+
+                historyData.unshift({ period: currentPeriod, result: apiResult.result, prediction: prediction.type, resultStatus: "Pending" });
+                updateHistory();
+                checkWinLoss(apiResult);
+            }
+        }
+
+        function checkWinLoss(apiResult) {
+            if (!apiResult) return;
+
+            historyData.forEach(item => {
+                if (item.period === apiResult.period) {
+                    let actualResult = apiResult.result >= 5 ? "BIG" : "SMALL";
+                    item.resultStatus = (item.prediction === actualResult) ? "WIN" : "LOSS";
                 }
-            } catch (error) { console.error("Fetch error:", error); }
+            });
+
+            updateStats();
+            updateHistory();
         }
-        function calculateBigSmall(period) {
-            let sumOfDigits = period.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
-            let result = (sumOfDigits % 10 <= 4) ? 'SMALL' : 'BIG';
-            document.getElementById('predicted-result').textContent = result;
-            updateHistory(period, result);
+
+        function updateStats() {
+            let totalWins = historyData.filter(item => item.resultStatus === "WIN").length;
+            let totalLosses = historyData.filter(item => item.resultStatus === "LOSS").length;
+            let totalPredictions = historyData.length;
+            let accuracy = totalPredictions ? ((totalWins / totalPredictions) * 100).toFixed(2) + "%" : "0%";
+
+            document.getElementById("totalWins").innerText = totalWins;
+            document.getElementById("totalLosses").innerText = totalLosses;
+            document.getElementById("accuracy").innerText = accuracy;
         }
-        function updateHistory(period, result) {
-            let newEntry = { period: period.toString().slice(-4), prediction: result, status: "PENDING" };
-            storedHistory.unshift(newEntry);
-            storedHistory = storedHistory.slice(0, 10);
-            localStorage.setItem("gameHistory", JSON.stringify(storedHistory));
-            renderHistory();
-        }
-        function renderHistory() {
-            const historyTable = document.getElementById('history-list');
-            historyTable.innerHTML = '';
-            storedHistory.forEach(entry => {
-                let row = document.createElement('tr');
-                row.innerHTML = `<td>${entry.period}</td><td>${entry.prediction}</td>
-                                 <td class="${entry.status === 'WIN' ? 'win-text' : entry.status === 'LOSS' ? 'loss-text' : 'pending-text'}">
-                                 ${entry.status}</td>`;
+
+        function updateHistory() {
+            let historyTable = document.getElementById("historyList");
+            historyTable.innerHTML = "";
+
+            historyData.forEach(item => {
+                let row = document.createElement("tr");
+                row.innerHTML = `<td>${item.period}</td><td>${item.prediction}</td><td>${item.result >= 5 ? "BIG" : "SMALL"}</td><td class="${item.resultStatus.toLowerCase()}">${item.resultStatus}</td>`;
                 historyTable.appendChild(row);
             });
         }
-        setInterval(fetchCurrentGameIssue, 5000);
-        fetchCurrentGameIssue();
+
+        setInterval(updatePrediction, 3000);
     </script>
 </body>
-</html>
-               
+</html>          
