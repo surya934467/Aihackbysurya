@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     predictedCategory: lastPrediction.category,
                     actualNumber: latestActual,
                     actualCategory: actualCategory,
-                    result: isCorrect ? '✓' : '✗',
+                    result: isCorrect ? '🏆' : '✗',
                     timestamp: new Date().toISOString()
                 };
 
@@ -581,7 +581,7 @@ document.addEventListener('DOMContentLoaded', function() {
             predictedPremiumElement.textContent = `${currentPrediction.confidence}%`;
         } else {
             predictedNumberElement.textContent = '--';
-            predictionCategoryElement.textContent = 'Category: --';
+            predictionCategoryElement.textContent = 'BUY STOCK: --';
             predictedPremiumElement.textContent = '--%';
         }
 
@@ -610,13 +610,13 @@ document.addEventListener('DOMContentLoaded', function() {
         totalPredictionsElement.textContent = predictionHistory.length;
         
         if (predictionHistory.length > 0) {
-            const correctPredictions = predictionHistory.filter(entry => entry.result === '✓').length;
+            const correctPredictions = predictionHistory.filter(entry => entry.result === '🏆').length;
             const accuracy = Math.round((correctPredictions / predictionHistory.length) * 100);
             accuracyRateElement.textContent = `${accuracy}%`;
             
             if (predictionHistory[0]) {
                 lastResultElement.textContent = predictionHistory[0].result;
-                lastResultElement.style.color = predictionHistory[0].result === '✓' ? 'var(--matrix-green)' : 'var(--error-red)';
+                lastResultElement.style.color = predictionHistory[0].result === '🏆' ? 'var(--matrix-green)' : 'var(--error-red)';
             }
         } else {
             accuracyRateElement.textContent = '0%';
@@ -645,7 +645,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${entry.issueNumber}</td>
                 <td>${entry.predictedNumber} (${entry.predictedCategory})</td>
                 <td>${entry.actualNumber} (${entry.actualCategory})</td>
-                <td style="color: ${entry.result === '✓' ? 'var(--matrix-green)' : 'var(--error-red)'}">${entry.result}</td>
+                <td style="color: ${entry.result === '🏆' ? 'var(--matrix-green)' : 'var(--error-red)'}">${entry.result}</td>
                 <td>${new Date(entry.timestamp).toLocaleTimeString()}</td>
             `;
             historyTableBody.appendChild(row);
