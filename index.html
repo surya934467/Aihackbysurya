@@ -645,7 +645,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${entry.issueNumber}</td>
                 <td>${entry.predictedNumber} (${entry.predictedCategory})</td>
                 <td>${entry.actualNumber} (${entry.actualCategory})</td>
-                <td style="color: ${entry.result === '𝐖𝐈𝐍' ? 'var(--matrix-green)' : 'var(--error-red)'}">${entry.result}</td>
+                <td style="color: ${entry.result === '🏆' ? 'var(--matrix-green)' : 'var(--error-red)'}">${entry.result}</td>
                 <td>${new Date(entry.timestamp).toLocaleTimeString()}</td>
             `;
             historyTableBody.appendChild(row);
@@ -683,7 +683,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Categorize numbers as Small (0-4) or Big (5-9)
     function categorizeNumber(number) {
-        return (number >= 0 && number <= 4) ? 'Small' : 'Big';
+        return (number >= 0 && number <= 4) ? 'SMALL' : 'BIG';
     }
 
     // API fetch functions with error handling
