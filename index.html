@@ -452,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
         systemStatus = 'updating';
         updateSystemStatus();
         loadingSpinner.style.display = 'block';
-        errorMessageElement.textContent = '';
+        errorMessageElement.textContent = 'block';
 
         try {
             // Fetch the latest data
@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     predictedCategory: lastPrediction.category,
                     actualNumber: latestActual,
                     actualCategory: actualCategory,
-                    result: isCorrect ? '🏆' : '✗',
+                    result: isCorrect ? '🏆' : '💔',
                     timestamp: new Date().toISOString()
                 };
 
