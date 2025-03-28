@@ -610,13 +610,13 @@ document.addEventListener('DOMContentLoaded', function() {
         totalPredictionsElement.textContent = predictionHistory.length;
         
         if (predictionHistory.length > 0) {
-            const correctPredictions = predictionHistory.filter(entry => entry.result === '✓').length;
+            const correctPredictions = predictionHistory.filter(entry => entry.result === '🏆').length;
             const accuracy = Math.round((correctPredictions / predictionHistory.length) * 100);
             accuracyRateElement.textContent = `${accuracy}%`;
             
             if (predictionHistory[0]) {
                 lastResultElement.textContent = predictionHistory[0].result;
-                lastResultElement.style.color = predictionHistory[0].result === '✓' ? 'var(--matrix-green)' : 'var(--error-red)';
+                lastResultElement.style.color = predictionHistory[0].result === '🏆' ? 'var(--matrix-green)' : 'var(--error-red)';
             }
         } else {
             accuracyRateElement.textContent = '0%';
@@ -645,7 +645,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${entry.issueNumber}</td>
                 <td>${entry.predictedNumber} (${entry.predictedCategory})</td>
                 <td>${entry.actualNumber} (${entry.actualCategory})</td>
-                <td style="color: ${entry.result === '✓' ? 'var(--matrix-green)' : 'var(--error-red)'}">${entry.result}</td>
+                <td style="color: ${entry.result === '🏆' ? 'var(--matrix-green)' : 'var(--error-red)'}">${entry.result}</td>
                 <td>${new Date(entry.timestamp).toLocaleTimeString()}</td>
             `;
             historyTableBody.appendChild(row);
@@ -683,7 +683,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Categorize numbers as Small (0-4) or Big (5-9)
     function categorizeNumber(number) {
-        return (number >= 0 && number <= 4) ? 'SMALL': 'BIG';
+        return (number >= 0 && number <= 4) ? 'BIG': 'SMALL';
     }
 
     // API fetch functions with error handling
