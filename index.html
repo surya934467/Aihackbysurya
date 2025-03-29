@@ -593,11 +593,11 @@
                 <select id="algorithmType">
                     <option value="basic">Basic Pattern</option>
                     <option value="advanced" selected>Advanced AI</option>
-                    <option value="quantum">Quantum Simulation</option>
+                    <option value="quantum">CHATGPT</option>
                 </select>
             </div>
             <div class="settings-row">
-                <label for="randomnessFactor">Randomness Factor:</label>
+                <label for="randomnessFactor">AI Factor:</label>
                 <input type="range" id="randomnessFactor" min="0" max="100" value="15">
                 <span id="randomnessValue">15%</span>
             </div>
@@ -996,7 +996,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     predictedCategory: lastPrediction.category,
                     actualNumber: latestActual,
                     actualCategory: actualCategory,
-                    result: isCorrect ? '✓' : '✗',
+                    result: isCorrect ? '🏆' : '✗',
                     timestamp: new Date().toISOString()
                 };
 
@@ -1055,7 +1055,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update prediction display
         if (currentPrediction) {
             predictedNumberElement.textContent = currentPrediction.number;
-            predictionCategoryElement.textContent = `Category: ${currentPrediction.category}`;
+            predictionCategoryElement.textContent = `BUY PREMIUM: ${currentPrediction.category}`;
             predictedPremiumElement.textContent = `${currentPrediction.confidence}%`;
         } else {
             predictedNumberElement.textContent = '--';
@@ -1091,13 +1091,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                          currentStreak > 0 ? 'var(--warning-yellow)' : 'var(--error-red)';
         
         if (predictionHistory.length > 0) {
-            const correctPredictions = predictionHistory.filter(entry => entry.result === '✓').length;
+            const correctPredictions = predictionHistory.filter(entry => entry.result === '🏆').length;
             const accuracy = Math.round((correctPredictions / predictionHistory.length) * 100);
             accuracyRateElement.textContent = `${accuracy}%`;
             
             if (predictionHistory[0]) {
                 lastResultElement.textContent = predictionHistory[0].result;
-                lastResultElement.style.color = predictionHistory[0].result === '✓' ? 'var(--matrix-green)' : 'var(--error-red)';
+                lastResultElement.style.color = predictionHistory[0].result === '🏆' ? 'var(--matrix-green)' : 'var(--error-red)';
             }
         } else {
             accuracyRateElement.textContent = '0%';
@@ -1318,7 +1318,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Categorize numbers as Small (0-4) or Big (5-9)
     function categorizeNumber(number) {
-        return (number >= 0 && number <= 4) ? 'Small' : 'Big';
+        return (number >= 0 && number <= 4) ? 'SMALL' : 'BIG';
     }
 
     // API fetch functions with error handling
