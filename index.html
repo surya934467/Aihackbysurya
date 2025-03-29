@@ -1236,7 +1236,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     predictedCategory: state.lastPrediction.category,
                     actualNumber: latestActual,
                     actualCategory: actualCategory,
-                    result: isCorrect ? '✓' : '✗',
+                    result: isCorrect ? '🏆' : '✗',
                     timestamp: new Date().toISOString()
                 };
 
@@ -1296,7 +1296,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update prediction display
         if (state.currentPrediction) {
             elements.predictedNumber.textContent = state.currentPrediction.number;
-            elements.predictionCategory.textContent = `Category: ${state.currentPrediction.category}`;
+            elements.predictionCategory.textContent = `BUY: ${state.currentPrediction.category}`;
             elements.confidenceValue.textContent = `${state.currentPrediction.confidence}%`;
             elements.confidenceLevel.style.width = `${state.currentPrediction.confidence}%`;
         } else {
@@ -1336,7 +1336,7 @@ document.addEventListener('DOMContentLoaded', function() {
         elements.currentStreak.textContent = state.currentStreak;
         
         if (state.predictionHistory.length > 0) {
-            const correctPredictions = state.predictionHistory.filter(entry => entry.result === '✓').length;
+            const correctPredictions = state.predictionHistory.filter(entry => entry.result === '🏆').length;
             const accuracy = Math.round((correctPredictions / state.predictionHistory.length) * 100);
             elements.accuracyRate.textContent = `${accuracy}%`;
             
@@ -1471,7 +1471,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${entry.issueNumber}</td>
                 <td>${entry.predictedNumber} (${entry.predictedCategory})</td>
                 <td>${entry.actualNumber} (${entry.actualCategory})</td>
-                <td style="color: ${entry.result === '✓' ? 'var(--matrix-green)' : 'var(--error-red)'}">${entry.result}</td>
+                <td style="color: ${entry.result === '🏆' ? 'var(--matrix-green)' : 'var(--error-red)'}">${entry.result}</td>
                 <td>${new Date(entry.timestamp).toLocaleTimeString()}</td>
             `;
             elements.historyTableBody.appendChild(row);
