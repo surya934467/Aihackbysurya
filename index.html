@@ -1236,7 +1236,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     predictedCategory: state.lastPrediction.category,
                     actualNumber: latestActual,
                     actualCategory: actualCategory,
-                    result: isCorrect ? '🏆' : '✗',
+                    result: isCorrect ? '🏆' : 'SORRY',
                     timestamp: new Date().toISOString()
                 };
 
@@ -1369,11 +1369,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update pattern indicator
         if (smallPercent > 60) {
-            elements.patternIndicator.textContent = 'Small ▲';
+            elements.patternIndicator.textContent = 'SMALL ▲';
             elements.patternIndicator.className = 'prediction-value trend-up';
             elements.patternStrength.textContent = `Strength: ${smallPercent}%`;
         } else if (bigPercent > 60) {
-            elements.patternIndicator.textContent = 'Big ▲';
+            elements.patternIndicator.textContent = 'BIG ▲';
             elements.patternIndicator.className = 'prediction-value trend-up';
             elements.patternStrength.textContent = `Strength: ${bigPercent}%`;
         } else {
@@ -1414,10 +1414,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update UI
         if (trendDirection === 'Up') {
-            elements.trendIndicator.textContent = 'Small ▲';
+            elements.trendIndicator.textContent = 'SMALL ▲';
             elements.trendIndicator.className = 'prediction-value trend-up';
         } else {
-            elements.trendIndicator.textContent = 'Big ▲';
+            elements.trendIndicator.textContent = 'BIG ▲';
             elements.trendIndicator.className = 'prediction-value trend-up';
         }
         
@@ -1604,7 +1604,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Categorize numbers as Small (0-4) or Big (5-9)
     function categorizeNumber(number) {
-        return (number >= 0 && number <= 4) ? 'SMALL' : 'BIG';
+        return (number >= 4 && number <= 0) ? 'BIG' : 'SMALL';
     }
 
     // API fetch functions with error handling
