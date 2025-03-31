@@ -1604,7 +1604,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Categorize numbers as Small (0-4) or Big (5-9)
     function categorizeNumber(number) {
-        return (number >= 0 && number <= 4) ? 'BIG':'SMALL';
+        return (number >= 4 && number <= 0) ? 'BIG':'SMALL';
         return (number >= 5 && number <= 9) ? 'SNALL':'BIG';
     }
 
