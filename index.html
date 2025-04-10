@@ -1,1922 +1,2513 @@
-<!DOCTYPE html>
+       <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUANTUM AI PREDICTOR - SURYA S3 ULTRA PRO MAX</title>
+    <title>Vasco A1X TRADER PRO</title>
+    <!-- TensorFlow JS (for AI) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <!-- FontAwesome Icons & Tailwind CSS -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter for Normal Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Exo+2:wght@400;600&display=swap');
-
-        :root {
-            --quantum-blue: #00f0ff;
-            --ai-purple: #9d00ff;
-            --matrix-green: #00ff88;
-            --error-red: #ff3366;
-            --warning-yellow: #ffcc00;
-            --success-green: #00ff88;
-            --info-blue: #00aaff;
-            --dark-space: #0a0a1a;
-            --deep-space: #000011;
-        }
-
+        /* Normal Font and Modern Design */
         body {
-            font-family: 'Exo 2', sans-serif;
-            background: linear-gradient(135deg, var(--deep-space), var(--dark-space));
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
             color: #ffffff;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3 {
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            text-align: center;
-            background: linear-gradient(90deg, var(--quantum-blue), var(--ai-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-            margin-bottom: 1.5rem;
-            letter-spacing: 1px;
+            overflow-y: auto;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .card {
-            background: rgba(10, 10, 30, 0.7);
-            border: 1px solid rgba(0, 240, 255, 0.3);
+            max-width: 480px;
+            margin: 20px auto;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            padding: 2rem;
-            margin: 2rem 0;
             backdrop-filter: blur(10px);
-            position: relative;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
-            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.8s ease-in-out;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border-radius: 18px;
-            background: linear-gradient(45deg, var(--quantum-blue), var(--ai-purple), var(--matrix-green));
-            z-index: -1;
-            opacity: 0.3;
-            animation: borderGlow 8s linear infinite;
-            background-size: 400% 400%;
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes borderGlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-            padding: 0.8rem;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            border-left: 4px solid var(--quantum-blue);
-        }
-
-        .status-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .status-icon {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .status-icon.active {
-            background-color: var(--matrix-green);
-            box-shadow: 0 0 10px var(--matrix-green);
-        }
-
-        .status-icon.warning {
-            background-color: var(--warning-yellow);
-            box-shadow: 0 0 10px var(--warning-yellow);
-        }
-
-        .status-icon.error {
-            background-color: var(--error-red);
-            box-shadow: 0 0 10px var(--error-red);
-        }
-
-        .countdown {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.8rem;
+        .heading {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
             text-align: center;
-            margin: 1rem 0;
-            color: var(--matrix-green);
-            text-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
-            letter-spacing: 2px;
+            animation: glow 2s infinite;
         }
 
-        .prediction-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; }
+            50% { text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff; }
         }
 
-        .prediction-card {
-            background: rgba(20, 20, 50, 0.5);
+        .box {
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .prediction-card:hover {
+        .box:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 240, 255, 0.2);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
-        .prediction-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--quantum-blue), var(--ai-purple));
-        }
-
-        .prediction-label {
-            color: var(--quantum-blue);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .prediction-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            margin: 0.5rem 0;
-            color: white;
-        }
-
-        .confidence-meter {
+        .progress-bar {
             height: 8px;
-            background: rgba(0, 240, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 4px;
-            margin: 1rem 0;
             overflow: hidden;
         }
 
-        .confidence-level {
+        .progress-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--ai-purple), var(--quantum-blue));
+            background: linear-gradient(90deg, #00ff00, #ff00ff);
             border-radius: 4px;
-            transition: width 1s ease;
+            transition: width 0.5s ease;
         }
 
-        .prediction-details {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 0.5rem;
-        }
-
-        .analysis-section {
-            margin: 2rem 0;
-        }
-
-        .pattern-visualization {
-            display: flex;
-            height: 40px;
-            margin: 1.5rem 0;
+        .btn {
+            background: linear-gradient(90deg, #00ff00, #ff00ff);
+            color: white;
+            padding: 10px 20px;
+            border: none;
             border-radius: 8px;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
         }
 
-        .pattern-segment {
-            height: 100%;
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .history-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            animation: slideUp 0.5s ease-in-out;
+        }
+
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .mark {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff00ff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .mark.green {
+            background: #00ff00;
+        }
+
+        #history-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Robot Icon and Message */
+        .robot-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            z-index: 1000;
+        }
+
+        .robot-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .robot-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .robot-message {
+            background: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            max-width: 200px;
+            text-align: center;
+            animation: fadeInMessage 0.5s ease-in-out;
+        }
+
+        @keyframes fadeInMessage {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            border-bottom: 2px solid #ff00ff;
+            color: #ff00ff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats Cards */
+        .stats-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
             color: white;
-            transition: all 0.5s ease;
+            padding: 12px 16px;
+            border-radius: 8px;
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.5s ease-out;
         }
 
-        .pattern-segment.small {
-            background: rgba(0, 240, 255, 0.7);
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
         }
 
-        .pattern-segment.big {
-            background: rgba(157, 0, 255, 0.7);
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            transition: right 0.3s ease;
+            z-index: 999;
+            overflow-y: auto;
         }
 
-        .heatmap-container {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
+        .settings-panel.open {
+            right: 0;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(90deg, #00ff00, #ff00ff);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Countdown Timer */
+        .countdown {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff00ff;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        /* Pattern Recognition */
+        .pattern-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .pattern-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .pattern-dot.active {
+            background: linear-gradient(135deg, #00ff00, #ff00ff);
+            box-shadow: 0 0 8px #ff00ff;
+        }
+        
+        /* Server Cards */
+        .server-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .server-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #ffffff;
+        }
+        
+        .server-prediction {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .server1 {
+            border-left: 4px solid #4f46e5;
+        }
+        
+        .server2 {
+            border-left: 4px solid #10b981;
+        }
+        
+        /* New Features */
+        /* VIP Section */
+        .vip-badge {
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: black;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+        
+        /* AI Confidence Indicator */
+        .confidence-meter {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .confidence-label {
+            font-size: 12px;
+            margin-right: 8px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .confidence-bar {
+            flex-grow: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #ff00ff);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Strategy Selector */
+        .strategy-selector {
+            display: flex;
             gap: 8px;
-            margin: 1.5rem 0;
+            margin-top: 12px;
         }
-
-        .heatmap-cell {
+        
+        .strategy-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        .strategy-btn.active {
+            background: linear-gradient(90deg, #00ff00, #ff00ff);
+            border-color: transparent;
+        }
+        
+        /* Performance Badge */
+        .performance-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        
+        .badge-excellent {
+            background: linear-gradient(135deg, #00ff00, #00cc00);
+        }
+        
+        .badge-good {
+            background: linear-gradient(135deg, #aaff00, #77cc00);
+        }
+        
+        .badge-average {
+            background: linear-gradient(135deg, #ffff00, #cccc00);
+        }
+        
+        .badge-poor {
+            background: linear-gradient(135deg, #ff9900, #cc7700);
+        }
+        
+        .badge-bad {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+        }
+        
+        /* VIP Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .vip-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .vip-icon {
+            margin-right: 12px;
+            font-size: 20px;
+            color: #ff00ff;
+        }
+        
+        .vip-text {
+            flex: 1;
+        }
+        
+        .vip-feature-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .vip-feature-desc {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .vip-btn {
+            background: linear-gradient(135deg, #ff00ff, #00ff00);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .vip-btn:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        
+        .toggle-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* AI Prediction Panel */
+        .ai-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 12px;
+            border-left: 4px solid #4f46e5;
+        }
+        
+        .ai-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #4f46e5;
+        }
+        
+        .ai-prediction {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        /* Number Grid */
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .number-cell {
             aspect-ratio: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .heatmap-cell:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-        }
-
-        .heatmap-cell::after {
-            content: attr(data-count);
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            font-size: 0.6rem;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 0 3px;
-            border-radius: 3px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .stat-card {
-            background: rgba(20, 20, 50, 0.3);
-            border-radius: 10px;
-            padding: 1.2rem;
-            border: 1px solid rgba(0, 240, 255, 0.1);
-            text-align: center;
-        }
-
-        .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            color: var(--quantum-blue);
-            margin: 0.5rem 0;
-        }
-
-        .stat-label {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-        }
-
-        .trend-indicator {
-            display: inline-block;
-            margin-left: 10px;
-            font-size: 1.2rem;
-        }
-
-        .trend-up {
-            color: var(--success-green);
-        }
-
-        .trend-down {
-            color: var(--error-red);
-        }
-
-        .trend-neutral {
-            color: var(--warning-yellow);
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-
-        .quantum-button {
-            background: linear-gradient(90deg, var(--ai-purple), var(--quantum-blue));
-            border: none;
-            padding: 1rem 2rem;
             border-radius: 8px;
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 180px;
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             font-weight: bold;
-            box-shadow: 0 5px 15px rgba(157, 0, 255, 0.3);
-        }
-
-        .quantum-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 240, 255, 0.4);
-        }
-
-        .quantum-button:active {
-            transform: translateY(0);
-        }
-
-        .quantum-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .quantum-button i {
-            margin-right: 8px;
-        }
-
-        .spinner {
-            border: 4px solid rgba(0, 240, 255, 0.2);
-            border-top: 4px solid var(--quantum-blue);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .message {
-            text-align: center;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            font-weight: bold;
-        }
-
-        .error-message {
-            background: rgba(255, 51, 102, 0.2);
-            border-left: 4px solid var(--error-red);
-            color: var(--error-red);
-            animation: pulse 2s infinite;
-        }
-
-        .warning-message {
-            background: rgba(255, 204, 0, 0.2);
-            border-left: 4px solid var(--warning-yellow);
-            color: var(--warning-yellow);
-        }
-
-        .success-message {
-            background: rgba(0, 255, 136, 0.2);
-            border-left: 4px solid var(--success-green);
-            color: var(--success-green);
-        }
-
-        .info-message {
-            background: rgba(0, 170, 255, 0.2);
-            border-left: 4px solid var(--info-blue);
-            color: var(--info-blue);
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.8; }
-            50% { opacity: 1; }
-            100% { opacity: 0.8; }
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1.5rem 0;
-            background: rgba(20, 20, 50, 0.3);
-        }
-
-        .data-table th, .data-table td {
-            padding: 1rem;
-            text-align: center;
-            border: 1px solid rgba(0, 240, 255, 0.1);
-        }
-
-        .data-table th {
-            background: linear-gradient(90deg, rgba(157, 0, 255, 0.3), rgba(0, 240, 255, 0.3));
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .data-table tr:nth-child(even) {
-            background: rgba(0, 240, 255, 0.05);
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .tooltip {
             position: relative;
-            display: inline-block;
-            cursor: help;
-            margin-left: 5px;
         }
-
-        .tooltip .tooltip-text {
-            visibility: hidden;
-            width: 220px;
-            background-color: rgba(10, 10, 30, 0.95);
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            border: 1px solid var(--quantum-blue);
-            font-size: 0.9rem;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        
+        .number-cell.green {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
         }
-
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
+        
+        .number-cell.red {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
         }
-
-        /* Notification system */
-        .notification-bell {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(20, 20, 50, 0.8);
-            border: 1px solid var(--quantum-blue);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .notification-bell:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
-        }
-
-        .notification-bell i {
-            color: var(--quantum-blue);
-            font-size: 1.5rem;
-        }
-
-        .notification-badge {
+        
+        .number-cell.hot::after {
+            content: "🔥";
             position: absolute;
             top: -5px;
             right: -5px;
-            background: var(--error-red);
-            color: white;
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
-            box-shadow: 0 0 10px rgba(255, 51, 102, 0.7);
+            font-size: 12px;
         }
-
-        .notification-panel {
+        
+        .number-cell.cold::after {
+            content: "❄️";
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 12px;
+        }
+        
+        /* VIP Indicator */
+        .vip-indicator {
             position: fixed;
-            top: 80px;
-            right: 20px;
-            background: rgba(10, 10, 30, 0.95);
-            border: 1px solid var(--quantum-blue);
-            border-radius: 12px;
-            width: 350px;
-            max-height: 500px;
-            overflow-y: auto;
-            padding: 1.5rem;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: black;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
             z-index: 1000;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
-            display: none;
-            backdrop-filter: blur(10px);
-        }
-
-        .notification-panel h3 {
-            margin-top: 0;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
-        }
-
-        .notification-item {
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
-        }
-
-        .notification-item:last-child {
-            border-bottom: none;
-        }
-
-        .notification-title {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .notification-title i {
-            margin-right: 8px;
-        }
-
-        .notification-message {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 0.5rem;
-        }
-
-        .notification-time {
-            font-size: 0.8rem;
-            color: rgba(0, 240, 255, 0.7);
-            text-align: right;
-        }
-
-        .notification-item.error .notification-title {
-            color: var(--error-red);
-        }
-
-        .notification-item.warning .notification-title {
-            color: var(--warning-yellow);
-        }
-
-        .notification-item.success .notification-title {
-            color: var(--success-green);
-        }
-
-        .notification-item.info .notification-title {
-            color: var(--info-blue);
-        }
-
-        /* Settings panel */
-        .settings-panel {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(10, 10, 30, 0.98);
-            border: 1px solid var(--quantum-blue);
-            border-radius: 16px;
-            padding: 2rem;
-            z-index: 1001;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
-            display: none;
-            backdrop-filter: blur(10px);
-        }
-
-        .settings-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
-        }
-
-        .settings-close {
             cursor: pointer;
-            font-size: 1.5rem;
-            color: var(--quantum-blue);
+            display: flex;
+            align-items: center;
+        }
+        
+        .vip-indicator i {
+            margin-right: 6px;
+        }
+        
+        /* Server Selector */
+        .server-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .server-selector-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .settings-close:hover {
-            transform: rotate(90deg);
-        }
-
-        .settings-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .settings-group h3 {
-            text-align: left;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .settings-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .settings-row label {
-            flex: 1;
-            font-size: 0.9rem;
-        }
-
-        .settings-row select, .settings-row input[type="text"], .settings-row input[type="number"] {
-            background: rgba(20, 20, 50, 0.5);
-            border: 1px solid var(--quantum-blue);
-            color: white;
-            padding: 0.7rem;
-            border-radius: 6px;
-            width: 200px;
-        }
-
-        .settings-row input[type="range"] {
-            width: 200px;
-            margin-right: 1rem;
-        }
-
-        .settings-row input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--quantum-blue);
-        }
-
-        .settings-actions {
-            display: flex;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .prediction-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .countdown {
-                font-size: 2rem;
-            }
-
-            .prediction-value {
-                font-size: 2rem;
-            }
-
-            .button-group {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .quantum-button {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            .notification-panel {
-                width: 60%;
-                right: 5%;
-            }
-
-            .data-table th, .data-table td {
-                padding: 0.7rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .countdown {
-                font-size: 1.8rem;
-            }
-
-            .prediction-value {
-                font-size: 1.8rem;
-            }
-
-            .settings-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .settings-row select, .settings-row input {
-                width: 100%;
-                margin-top: 0.5rem;
-            }
+        
+        .server-selector-btn.active {
+            background: linear-gradient(90deg, #00ff00, #ff00ff);
+            border-color: transparent;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
-    <div class="notification-bell" id="notificationBell">
-        <i class="fas fa-bell"></i>
-        <div class="notification-badge" id="notificationBadge">0</div>
-    </div>
-    <div class="notification-panel" id="notificationPanel">
-        <h3><i class="fas fa-bell"></i> System Notifications</h3>
-        <div id="notificationList"></div>
+    <!-- VIP Modal -->
+    <div class="modal" id="vip-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">VIP Features</div>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            
+            <div class="vip-feature">
+                <div class="vip-icon"><i class="fas fa-bolt"></i></div>
+                <div class="vip-text">
+                    <div class="vip-feature-title">Real-time Signals</div>
+                    <div class="vip-feature-desc">Get instant notifications for high-probability trades</div>
+                </div>
+            </div>
+            
+            <div class="vip-feature">
+                <div class="vip-icon"><i class="fas fa-robot"></i></div>
+                <div class="vip-text">
+                    <div class="vip-feature-title">Advanced AI Predictions</div>
+                    <div class="vip-feature-desc">Access our proprietary neural network predictions</div>
+                </div>
+            </div>
+            
+            <div class="vip-feature">
+                <div class="vip-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="vip-text">
+                    <div class="vip-feature-title">Premium Analytics</div>
+                    <div class="vip-feature-desc">Detailed performance metrics and pattern recognition</div>
+                </div>
+            </div>
+            
+            <div class="vip-feature">
+                <div class="vip-icon"><i class="fas fa-crown"></i></div>
+                <div class="vip-text">
+                    <div class="vip-feature-title">VIP Support</div>
+                    <div class="vip-feature-desc">Priority customer support 24/7</div>
+                </div>
+            </div>
+            
+            <button class="vip-btn" onclick="subscribeVIP()">
+                UPGRADE TO VIP - $99/month
+            </button>
+        </div>
     </div>
 
-    <div class="settings-panel" id="settingsPanel">
-        <div class="settings-header">
-            <h2><i class="fas fa-cog"></i> SYSTEM SETTINGS</h2>
-            <span class="settings-close" id="settingsClose">&times;</span>
-        </div>
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settings-panel">
+        <h2 class="text-xl font-bold mb-4">Settings</h2>
         
-        <div class="settings-group">
-            <h3><i class="fas fa-brain"></i> Prediction Algorithm</h3>
-            <div class="settings-row">
-                <label for="algorithmType">Algorithm Type:</label>
-                <select id="algorithmType">
-                    <option value="basic">Basic Pattern</option>
-                    <option value="advanced" selected>Advanced AI</option>
-                    <option value="quantum">Quantum Neural Net</option>
-                    <option value="hybrid">Hybrid AI</option>
-                </select>
+        <div class="mb-4">
+            <h3 class="font-semibold mb-2">Notification Settings</h3>
+            <div class="flex items-center justify-between mb-2">
+                <span>Win Notifications</span>
+                <label class="switch">
+                    <input type="checkbox" id="win-notifications" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-            <div class="settings-row">
-                <label for="randomnessFactor">Randomness Factor: <span id="randomnessValue">15%</span></label>
-                <input type="range" id="randomnessFactor" min="0" max="100" value="15">
+            <div class="flex items-center justify-between mb-2">
+                <span>Loss Notifications</span>
+                <label class="switch">
+                    <input type="checkbox" id="loss-notifications" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-            <div class="settings-row">
-                <label for="historyWeight">History Weight:</label>
-                <input type="range" id="historyWeight" min="0" max="100" value="70">
-                <span id="historyWeightValue">70%</span>
+            <div class="flex items-center justify-between mb-2">
+                <span>Sound Effects</span>
+                <label class="switch">
+                    <input type="checkbox" id="sound-effects" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-        </div>
-        
-        <div class="settings-group">
-            <h3><i class="fas fa-palette"></i> Display Options</h3>
-            <div class="settings-row">
-                <label for="themeSelect">Color Theme:</label>
-                <select id="themeSelect">
-                    <option value="default" selected>Quantum Blue</option>
-                    <option value="matrix">Matrix Green</option>
-                    <option value="purple">Deep Purple</option>
-                    <option value="crimson">Crimson Red</option>
-                </select>
-            </div>
-            <div class="settings-row">
-                <label for="animationsToggle">Enable Animations:</label>
-                <input type="checkbox" id="animationsToggle" checked>
-            </div>
-            <div class="settings-row">
-                <label for="darkModeToggle">Dark Mode:</label>
-                <input type="checkbox" id="darkModeToggle" checked>
+            <div class="flex items-center justify-between mb-2">
+                <span>Vibration</span>
+                <label class="switch">
+                    <input type="checkbox" id="vibration" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
         
-        <div class="settings-group">
-            <h3><i class="fas fa-bell"></i> Notifications</h3>
-            <div class="settings-row">
-                <label for="soundToggle">Enable Sound Alerts:</label>
-                <input type="checkbox" id="soundToggle" checked>
+        <div class="mb-4">
+            <h3 class="font-semibold mb-2">Analytics Settings</h3>
+            <div class="flex items-center justify-between mb-2">
+                <span>Show Advanced Stats</span>
+                <label class="switch">
+                    <input type="checkbox" id="advanced-stats" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-            <div class="settings-row">
-                <label for="vibrationToggle">Enable Vibration:</label>
-                <input type="checkbox" id="vibrationToggle">
+            <div class="flex items-center justify-between mb-2">
+                <span>Auto-Refresh Data</span>
+                <label class="switch">
+                    <input type="checkbox" id="auto-refresh" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-            <div class="settings-row">
-                <label for="notificationFrequency">Alert Frequency:</label>
-                <select id="notificationFrequency">
-                    <option value="all">All Notifications</option>
-                    <option value="important" selected>Important Only</option>
-                    <option value="none">None</option>
-                </select>
+            <div class="flex items-center justify-between mb-2">
+                <span>Show Hot/Cold Numbers</span>
+                <label class="switch">
+                    <input type="checkbox" id="hot-cold-numbers" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
         
-        <div class="settings-actions">
-            <button class="quantum-button" id="saveSettings"><i class="fas fa-save"></i> SAVE SETTINGS</button>
+        <div class="mb-4">
+            <h3 class="font-semibold mb-2">Betting Settings</h3>
+            <div class="mb-2">
+                <label class="block text-sm mb-1">Default Bet Amount</label>
+                <input type="number" id="bet-amount" value="100" min="10" max="10000" class="w-full bg-gray-700 rounded p-2">
+            </div>
+            <div class="flex items-center justify-between mb-2">
+                <span>Auto-Bet on High Confidence</span>
+                <label class="switch">
+                    <input type="checkbox" id="auto-bet">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <h3 class="font-semibold mb-2">Theme</h3>
+            <div class="flex gap-2">
+                <button class="px-3 py-1 rounded bg-purple-600" onclick="changeTheme('purple')">Purple</button>
+                <button class="px-3 py-1 rounded bg-blue-600" onclick="changeTheme('blue')">Blue</button>
+                <button class="px-3 py-1 rounded bg-green-600" onclick="changeTheme('green')">Green</button>
+                <button class="px-3 py-1 rounded bg-red-600" onclick="changeTheme('red')">Red</button>
+            </div>
+        </div>
+        
+        <button class="btn w-full mt-4" onclick="closeSettings()">Close Settings</button>
+    </div>
+
+    <!-- Robot Icon and Message -->
+    <div class="robot-container">
+        <div id="robot-message" class="robot-message" style="display: none;"></div>
+        <div class="robot-icon" id="robot-icon" onclick="toggleSettings()">
+            ⚙️
         </div>
     </div>
+
+    <!-- VIP Indicator -->
+    <div class="vip-indicator" onclick="openModal()">
+        <i class="fas fa-crown"></i>
+        <span>UPGRADE TO VIP</span>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+        <div class="toggle-btn" id="dark-mode-toggle">
+            <i class="fas fa-moon"></i>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
 
     <div class="container">
-        <h1>QUANTUM AI PREDICTOR</h1>
-        <h2>SURYA S3 ULTRA PRO MAX</h2>
-        
-        <div class="status-bar">
-            <div class="status-item">
-                <div class="status-icon active" id="systemStatusIcon"></div>
-                <span id="systemStatusText">Initializing quantum network...</span>
+        <!-- Heading -->
+        <h1 class="heading">
+            TKS <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-purple-400">A1X PRO</span>
+            <span class="vip-badge">VIP EDITION</span>
+        </h1>
+
+        <!-- Countdown Timer -->
+        <div class="countdown" id="countdown">
+            Next update in: 5s
+        </div>
+
+        <!-- Server Selector Buttons -->
+        <div class="server-selector">
+            <button class="server-selector-btn active" id="server1-btn" onclick="showServer('server1')">SERVER 1</button>
+            <button class="server-selector-btn" id="server2-btn" onclick="showServer('server2')">SERVER 2</button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('dashboard')">Dashboard</div>
+            <div class="tab" onclick="switchTab('analytics')">Analytics</div>
+            <div class="tab" onclick="switchTab('history')">History</div>
+            <div class="tab" onclick="switchTab('vip')">VIP</div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content active">
+            <!-- Current Period -->
+            <div class="box text-center">
+                <p class="text-lg font-semibold text-gray-300">
+                    <i class="fas fa-calendar-alt"></i> Period: <span id="period-number" class="text-white">Loading...</span>
+                </p>
+                <div class="mt-2 text-sm">
+                    <span id="server-status" class="text-green-400"><i class="fas fa-circle"></i> Connected</span>
+                    <span class="mx-2">|</span>
+                    <span id="ai-status" class="text-purple-400"><i class="fas fa-brain"></i> AI Active</span>
+                </div>
             </div>
-            <div class="status-item">
-                <i class="fas fa-database" style="color: var(--quantum-blue); margin-right: 8px;"></i>
-                <span id="dataStatus">Loading historical data...</span>
+            
+            <!-- Server 1 Prediction (SMALL/BIG) -->
+            <div class="server-card server1" id="server1-container">
+                <div class="server-title">SERVER 1 (SMALL/BIG)</div>
+                <div class="progress-bar mt-2">
+                    <div id="server1-progress" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+                <div id="server1-prediction" class="server-prediction text-blue-400">Loading...</div>
+                
+                <!-- AI Confidence Meter -->
+                <div class="confidence-meter">
+                    <div class="confidence-label">AI Confidence:</div>
+                    <div class="confidence-bar">
+                        <div id="server1-confidence" class="confidence-fill" style="width: 75%;"></div>
+                    </div>
+                    <div id="server1-confidence-value" class="text-xs ml-2">75%</div>
+                </div>
+                
+                <div class="pattern-indicator" id="server1-pattern">
+                    <!-- Dots will be added dynamically -->
+                </div>
+                
+                <!-- Strategy Selector -->
+                <div class="strategy-selector">
+                    <div class="strategy-btn active" onclick="changeStrategy('server1', 'streak')">Streak</div>
+                    <div class="strategy-btn" onclick="changeStrategy('server1', 'frequency')">Frequency</div>
+                    <div class="strategy-btn" onclick="changeStrategy('server1', 'neural')">Neural</div>
+                </div>
+                
+                <div class="mt-3 grid grid-cols-2 gap-2">
+                    <button class="btn bg-blue-500" onclick="placeBet('big')">Bet BIG</button>
+                    <button class="btn bg-yellow-500" onclick="placeBet('small')">Bet SMALL</button>
+                </div>
+                
+                <!-- AI Prediction Panel -->
+                <div class="ai-panel">
+                    <div class="ai-title">AI ANALYSIS</div>
+                    <div class="ai-prediction" id="server1-ai-prediction">
+                        Pattern recognition indicates 75% chance of BIG based on recent streak analysis.
+                    </div>
+                </div>
             </div>
-            <div class="status-item">
-                <i class="fas fa-shield-alt" style="color: var(--matrix-green); margin-right: 8px;"></i>
-                <span>Security: Quantum Encrypted</span>
+            
+            <!-- Server 2 Prediction (GREEN/RED) -->
+            <div class="server-card server2" id="server2-container" style="display: none;">
+                <div class="server-title">SERVER 2 (GREEN/RED)</div>
+                <div class="progress-bar mt-2">
+                    <div id="server2-progress" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+                <div id="server2-prediction" class="server-prediction text-green-400">Loading...</div>
+                
+                <!-- AI Confidence Meter -->
+                <div class="confidence-meter">
+                    <div class="confidence-label">AI Confidence:</div>
+                    <div class="confidence-bar">
+                        <div id="server2-confidence" class="confidence-fill" style="width: 65%;"></div>
+                    </div>
+                    <div id="server2-confidence-value" class="text-xs ml-2">65%</div>
+                </div>
+                
+                <div class="pattern-indicator" id="server2-pattern">
+                    <!-- Dots will be added dynamically -->
+                </div>
+                
+                <!-- Strategy Selector -->
+                <div class="strategy-selector">
+                    <div class="strategy-btn active" onclick="changeStrategy('server2', 'streak')">Streak</div>
+                    <div class="strategy-btn" onclick="changeStrategy('server2', 'frequency')">Frequency</div>
+                    <div class="strategy-btn" onclick="changeStrategy('server2', 'neural')">Neural</div>
+                </div>
+                
+                <div class="mt-3 grid grid-cols-2 gap-2">
+                    <button class="btn bg-green-500" onclick="placeBet('green')">Bet GREEN</button>
+                    <button class="btn bg-red-500" onclick="placeBet('red')">Bet RED</button>
+                </div>
+                
+                <!-- AI Prediction Panel -->
+                <div class="ai-panel">
+                    <div class="ai-title">AI ANALYSIS</div>
+                    <div class="ai-prediction" id="server2-ai-prediction">
+                        Neural network predicts 65% probability for GREEN based on historical patterns.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Number Grid -->
+            <div class="box">
+                <h2 class="text-lg font-semibold text-gray-300 text-center">Number Analysis</h2>
+                <div class="number-grid" id="number-grid">
+                    <!-- Numbers will be added dynamically -->
+                </div>
+                <div class="mt-3 text-sm text-center text-gray-400">
+                    <span><span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-1"></span> Green</span>
+                    <span class="mx-3"><span class="inline-block w-3 h-3 bg-red-500 rounded-full mr-1"></span> Red</span>
+                    <span>🔥 Hot</span>
+                    <span class="mx-3">❄️ Cold</span>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="box mt-6">
+                <h2 class="text-lg font-semibold text-gray-300 text-center">Quick Stats</h2>
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div class="stats-card text-center">
+                        <p class="text-gray-300">WIN Count</p>
+                        <p id="won-count" class="text-xl font-bold text-green-400">0</p>
+                    </div>
+                    <div class="stats-card text-center">
+                        <p class="text-gray-300">Lost Count</p>
+                        <p id="lost-count" class="text-xl font-bold text-red-400">0</p>
+                    </div>
+                    <div class="stats-card text-center">
+                        <p class="text-gray-300">WIN %</p>
+                        <p id="won-percentage" class="text-xl font-bold text-green-400">0%</p>
+                    </div>
+                    <div class="stats-card text-center">
+                        <p class="text-gray-300">Current Streak</p>
+                        <p id="current-streak" class="text-xl font-bold text-purple-400">0</p>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-400">Performance: <span id="performance-rating" class="performance-badge badge-average">Average</span></p>
+                </div>
+            </div>
+
+            <!-- Last 5 Results -->
+            <div class="box mt-6">
+                <h2 class="text-lg font-semibold text-gray-300 text-center">Last 5 Results</h2>
+                <div id="recent-results" class="flex justify-center gap-2 mt-4">
+                    <!-- Results will be added dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics-tab" class="tab-content">
+            <div class="box">
+                <h2 class="text-lg font-semibold text-gray-300 text-center">Performance Analytics</h2>
+                <canvas id="performance-chart" height="200"></canvas>
+                <div class="mt-2 text-center text-sm text-gray-400">
+                    <span><span class="inline-block w-3 h-3 bg-purple-500 rounded-full mr-1"></span> Server 1</span>
+                    <span class="mx-3"><span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-1"></span> Server 2</span>
+                </div>
+            </div>
+            
+            <div class="box mt-6">
+                <h2 class="text-lg font-semibold text-gray-300 text-center">Server 1 (SMALL/BIG) Analysis</h2>
+                <div class="mt-4">
+                    <p class="text-gray-300 mb-2">Big/Small Pattern:</p>
+                    <div id="big-small-pattern" class="flex gap-1 mb-4">
+                        <!-- Pattern will be added dynamically -->
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div class="stats-card text-center">
+                            <p class="text-gray-300">Big Accuracy</p>
+                            <p id="big-accuracy" class="text-xl font-bold text-blue-400">0%</p>
+                        </div>
+                        <div class="stats-card text-center">
+                            <p class="text-gray-300">Small Accuracy</p>
+                            <p id="small-accuracy" class="text-xl font-bold text-yellow-400">0%</p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <canvas id="big-small-chart" height="150"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="box mt-6">
+                <h2 class="text-lg font-semibold text-gray-300 text-center">Server 2 (GREEN/RED) Analysis</h2>
+                <div class="mt-4">
+                    <p class="text-gray-300 mb-2">Green/Red Pattern:</p>
+                    <div id="color-pattern" class="flex gap-1 mb-4">
+                        <!-- Pattern will be added dynamically -->
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div class="stats-card text-center">
+                            <p class="text-gray-300">Green Accuracy</p>
+                            <p id="green-accuracy" class="text-xl font-bold text-green-400">0%</p>
+                        </div>
+                        <div class="stats-card text-center">
+                            <p class="text-gray-300">Red Accuracy</p>
+                            <p id="red-accuracy" class="text-xl font-bold text-red-400">0%</p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <canvas id="color-chart" height="150"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="box mt-6">
+                <h2 class="text-lg font-semibold text-gray-300 text-center">Number Frequency</h2>
+                <div class="mt-4">
+                    <canvas id="number-frequency-chart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Tab -->
+        <div id="history-tab" class="tab-content">
+            <div class="box">
+                <h2 class="text-lg font-semibold text-gray-300 text-center">Prediction History</h2>
+                <div class="flex justify-between mb-2 px-2">
+                    <span class="text-gray-400 text-sm">Period</span>
+                    <span class="text-gray-400 text-sm">Server 1</span>
+                    <span class="text-gray-400 text-sm">Server 2</span>
+                    <span class="text-gray-400 text-sm">Result</span>
+                </div>
+                <div id="history-list" class="grid grid-cols-1 gap-3 mt-3"></div>
+            </div>
+            
+            <div class="box mt-6">
+                <h2 class="text-lg font-semibold text-gray-300 text-center">Export Data</h2>
+                <div class="flex gap-2 mt-4">
+                    <button class="btn flex-1" onclick="exportData('csv')">
+                        <i class="fas fa-file-csv mr-2"></i> CSV
+                    </button>
+                    <button class="btn flex-1" onclick="exportData('json')">
+                        <i class="fas fa-file-code mr-2"></i> JSON
+                    </button>
+                </div>
             </div>
         </div>
         
-        <div class="card">
-            <h2>QUANTUM PREDICTION ENGINE</h2>
-            <div id="loadingSpinner" class="spinner" style="display: none;"></div>
-            
-            <div id="errorMessage" class="message error-message"></div>
-            <div id="warningMessage" class="message warning-message"></div>
-            <div id="successMessage" class="message success-message"></div>
-            <div id="infoMessage" class="message info-message"></div>
-            
-            <div class="countdown" id="timeRemaining">
-                SYNCING WITH QUANTUM NETWORK...
-            </div>
-            
-            <div class="prediction-grid">
-                <div class="prediction-card">
-                    <div class="prediction-label">Current Prediction</div>
-                    <div id="predictedNumber" class="prediction-value">--</div>
-                    <div class="prediction-details">
-                        <span id="predictionCategory">Category: --</span>
-                        <span class="tooltip">ⓘ<span class="tooltip-text">Predicted number category (Small: 0-4, Big: 5-9)</span></span>
-                    </div>
-                    <div class="confidence-meter">
-                        <div id="confidenceLevel" class="confidence-level" style="width: 0%"></div>
-                    </div>
-                    <div class="prediction-details">Confidence Level: <span id="confidenceValue">--%</span></div>
+        <!-- VIP Tab -->
+        <div id="vip-tab" class="tab-content">
+            <div class="box text-center">
+                <div class="text-purple-400 text-4xl mb-4">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h2 class="text-xl font-bold mb-2">Upgrade to VIP</h2>
+                <p class="text-gray-300 mb-4">Unlock premium features and increase your winning rate</p>
+                
+                <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4 rounded-lg mb-6">
+                    <div class="text-3xl font-bold mb-2">$99/month</div>
+                    <div class="text-sm">Cancel anytime</div>
                 </div>
                 
-                <div class="prediction-card">
-                    <div class="prediction-label">Pattern Recognition</div>
-                    <div id="patternIndicator" class="prediction-value">--</div>
-                    <div class="prediction-details">
-                        <span id="patternStrength">Strength: --</span>
-                        <span class="tooltip">ⓘ<span class="tooltip-text">Identified pattern strength based on historical data</span></span>
+                <div class="text-left mb-6">
+                    <div class="flex items-start mb-4">
+                        <div class="text-green-400 mr-3 mt-1"><i class="fas fa-check-circle"></i></div>
+                        <div>
+                            <div class="font-bold">Advanced AI Predictions</div>
+                            <div class="text-sm text-gray-400">Our proprietary neural network provides 85%+ accuracy</div>
+                        </div>
                     </div>
-                    <div class="pattern-visualization">
-                        <div class="pattern-segment small" id="smallPatternBar" style="width: 50%">Small</div>
-                        <div class="pattern-segment big" id="bigPatternBar" style="width: 50%">Big</div>
+                    
+                    <div class="flex items-start mb-4">
+                        <div class="text-green-400 mr-3 mt-1"><i class="fas fa-check-circle"></i></div>
+                        <div>
+                            <div class="font-bold">Real-time Signals</div>
+                            <div class="text-sm text-gray-400">Instant notifications for high-probability trades</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start mb-4">
+                        <div class="text-green-400 mr-3 mt-1"><i class="fas fa-check-circle"></i></div>
+                        <div>
+                            <div class="font-bold">Premium Analytics</div>
+                            <div class="text-sm text-gray-400">Detailed performance metrics and pattern recognition</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="text-green-400 mr-3 mt-1"><i class="fas fa-check-circle"></i></div>
+                        <div>
+                            <div class="font-bold">VIP Support</div>
+                            <div class="text-sm text-gray-400">Priority customer support 24/7</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="prediction-card">
-                    <div class="prediction-label">Trend Analysis</div>
-                    <div id="trendIndicator" class="prediction-value">--</div>
-                    <div class="prediction-details">
-                        <span id="trendStrength">Momentum: --</span>
-                        <span class="tooltip">ⓘ<span class="tooltip-text">Current trend direction and momentum</span></span>
-                    </div>
-                    <div class="prediction-details" id="trendDuration">Duration: --</div>
-                </div>
-            </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Total Predictions</div>
-                    <div id="totalPredictions" class="stat-value">0</div>
-                </div>
+                <button class="btn w-full" onclick="openModal()">
+                    UPGRADE NOW
+                </button>
                 
-                <div class="stat-card">
-                    <div class="stat-label">Accuracy Rate</div>
-                    <div id="accuracyRate" class="stat-value">0%</div>
+                <div class="mt-6">
+                    <button class="btn bg-blue-500 w-full" onclick="reconnectServer()">
+                        <i class="fas fa-sync-alt mr-2"></i> RECONNECT SERVER
+                    </button>
+                    <button class="btn bg-purple-500 w-full mt-2" onclick="openWebsite('https://t.me/Suryarunl')">
+                        <i class="fas fa-external-link-alt mr-2"></i> WEB ADMIN
+                        
+                    </button>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-label">Current Streak</div>
-                    <div id="currentStreak" class="stat-value">0</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-label">Last Result</div>
-                    <div id="lastResult" class="stat-value">--</div>
-                </div>
-            </div>
-            
-            <div class="analysis-section">
-                <h3>Number Frequency Heatmap <span class="tooltip">ⓘ<span class="tooltip-text">Hot numbers appear more frequently in recent results</span></span></h3>
-                <div class="heatmap-container" id="heatMap">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-            </div>
-            
-            <div class="button-group">
-                <button id="manualRefresh" class="quantum-button"><i class="fas fa-sync-alt"></i> Refresh Data</button>
-                <button id="settingsButton" class="quantum-button"><i class="fas fa-cog"></i> Settings</button>
-                <button id="exportData" class="quantum-button"><i class="fas fa-file-export"></i> Export Data</button>
-                <button id="advancedAnalysis" class="quantum-button"><i class="fas fa-chart-line"></i> Advanced Analysis</button>
-            </div>
-        </div>
-        
-        <div class="card">
-            <h2>PREDICTION HISTORY MATRIX</h2>
-            <div class="table-container">
-                <table class="data-table" id="predictionHistoryTable">
-                    <thead>
-                        <tr>
-                            <th>Issue</th>
-                            <th>Predicted</th>
-                            <th>Actual</th>
-                            <th>Result</th>
-                            <th>Timestamp</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-            <div class="pagination">
-                <button id="prevPage" class="quantum-button" disabled><i class="fas fa-chevron-left"></i> Previous</button>
-                <button id="nextPage" class="quantum-button" disabled>Next <i class="fas fa-chevron-right"></i></button>
-            </div>
-        </div>
-        
-        <div class="card">
-            <h2>QUANTUM DATA INTERFACE</h2>
-            <div class="table-container">
-                <table class="data-table" id="dataTable">
-                    <thead>
-                        <tr>
-                            <th>Issue</th>
-                            <th>Number</th>
-                            <th>Pattern</th>
-                            <th>Probability</th>
-                            <th>Timestamp</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </div>
         </div>
     </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
-    const elements = {
-        tableBody: document.querySelector('#dataTable tbody'),
-        predictedNumber: document.getElementById('predictedNumber'),
-        predictionCategory: document.getElementById('predictionCategory'),
-        confidenceLevel: document.getElementById('confidenceLevel'),
-        confidenceValue: document.getElementById('confidenceValue'),
-        timer: document.getElementById('timeRemaining'),
-        historyTableBody: document.querySelector('#predictionHistoryTable tbody'),
-        prevPageButton: document.getElementById('prevPage'),
-        nextPageButton: document.getElementById('nextPage'),
-        errorMessage: document.getElementById('errorMessage'),
-        warningMessage: document.getElementById('warningMessage'),
-        successMessage: document.getElementById('successMessage'),
-        infoMessage: document.getElementById('infoMessage'),
-        loadingSpinner: document.getElementById('loadingSpinner'),
-        totalPredictions: document.getElementById('totalPredictions'),
-        accuracyRate: document.getElementById('accuracyRate'),
-        lastResult: document.getElementById('lastResult'),
-        currentStreak: document.getElementById('currentStreak'),
-        smallPatternBar: document.getElementById('smallPatternBar'),
-        bigPatternBar: document.getElementById('bigPatternBar'),
-        heatMap: document.getElementById('heatMap'),
-        trendIndicator: document.getElementById('trendIndicator'),
-        trendStrength: document.getElementById('trendStrength'),
-        trendDuration: document.getElementById('trendDuration'),
-        patternIndicator: document.getElementById('patternIndicator'),
-        patternStrength: document.getElementById('patternStrength'),
-        notificationBell: document.getElementById('notificationBell'),
-        notificationPanel: document.getElementById('notificationPanel'),
-        notificationBadge: document.getElementById('notificationBadge'),
-        notificationList: document.getElementById('notificationList'),
-        settingsButton: document.getElementById('settingsButton'),
-        settingsPanel: document.getElementById('settingsPanel'),
-        settingsClose: document.getElementById('settingsClose'),
-        saveSettingsButton: document.getElementById('saveSettings'),
-        manualRefreshButton: document.getElementById('manualRefresh'),
-        exportDataButton: document.getElementById('exportData'),
-        advancedAnalysisButton: document.getElementById('advancedAnalysis'),
-        systemStatusIcon: document.getElementById('systemStatusIcon'),
-        systemStatusText: document.getElementById('systemStatusText'),
-        dataStatus: document.getElementById('dataStatus')
-    };
-
-    // Data state
-    const state = {
-        predictionHistory: [],
-        lastPrediction: null,
-        currentPrediction: null,
-        currentPage: 0,
-        itemsPerPage: 10,
-        timerInterval: null,
-        isFetching: false,
-        systemStatus: 'initializing',
-        notifications: [],
-        currentStreak: 0,
-        settings: {
-            algorithmType: 'advanced',
-            randomnessFactor: 15,
-            historyWeight: 70,
+    <!-- JavaScript Code -->
+    <script>
+        // Global variables
+        let previousResults = [];
+        let latestResult = null;
+        let latestPeriod = null;
+        let history = [];
+        let countdownInterval;
+        let performanceChart;
+        let bigSmallChart;
+        let colorChart;
+        let numberFrequencyChart;
+        let settings = {
+            winNotifications: true,
+            lossNotifications: true,
+            soundEffects: true,
+            vibration: true,
+            advancedStats: true,
+            autoRefresh: true,
+            hotColdNumbers: true,
+            autoBet: false,
+            betAmount: 100,
             theme: 'default',
-            animations: true,
-            darkMode: true,
-            sound: true,
-            vibration: false,
-            notificationFrequency: 'important'
-        },
-        heatMapNumbers: Array(10).fill(0),
-        patternHistory: []
-    };
-
-    // Initialize the app
-    function init() {
-        try {
-            updateSystemStatus('initializing', 'Initializing quantum neural network...');
-            elements.loadingSpinner.style.display = 'block';
-
-            // Load saved data from localStorage
-            loadSavedData();
-            
-            // Initialize UI components
-            initializeHeatMap();
-            updateStats();
-            updatePatternAnalysis();
-            updateTrendAnalysis();
-            updateUI();
-
-            // Start the update cycle
-            startUpdateCycle();
-        } catch (error) {
-            showError('System initialization failed: ' + error.message);
-            console.error('Initialization error:', error);
-        } finally {
-            elements.loadingSpinner.style.display = 'none';
-        }
-    }
-
-    // Load saved data from localStorage
-    function loadSavedData() {
-        const savedHistory = localStorage.getItem('predictionHistory');
-        state.predictionHistory = savedHistory ? JSON.parse(savedHistory) : [];
+            darkMode: false
+        };
         
-        state.lastPrediction = JSON.parse(localStorage.getItem('lastPrediction'));
-        state.currentPrediction = JSON.parse(localStorage.getItem('currentPrediction'));
-        
-        // Load settings
-        const savedSettings = localStorage.getItem('systemSettings');
-        if (savedSettings) {
-            state.settings = JSON.parse(savedSettings);
-            applySettingsToUI();
-        }
-        
-        // Load notifications
-        const savedNotifications = localStorage.getItem('notifications');
-        if (savedNotifications) {
-            state.notifications = JSON.parse(savedNotifications);
-            updateNotificationBadge();
-        }
-
-        // Update data status
-        elements.dataStatus.textContent = state.predictionHistory.length > 0 ? 
-            `Loaded ${state.predictionHistory.length} historical records` : 
-            'No historical data available';
-    }
-
-    // Apply settings to UI elements
-    function applySettingsToUI() {
-        document.getElementById('algorithmType').value = state.settings.algorithmType;
-        document.getElementById('randomnessFactor').value = state.settings.randomnessFactor;
-        document.getElementById('randomnessValue').textContent = state.settings.randomnessFactor + '%';
-        document.getElementById('historyWeight').value = state.settings.historyWeight;
-        document.getElementById('historyWeightValue').textContent = state.settings.historyWeight + '%';
-        document.getElementById('themeSelect').value = state.settings.theme;
-        document.getElementById('animationsToggle').checked = state.settings.animations;
-        document.getElementById('darkModeToggle').checked = state.settings.darkMode;
-        document.getElementById('soundToggle').checked = state.settings.sound;
-        document.getElementById('vibrationToggle').checked = state.settings.vibration;
-        document.getElementById('notificationFrequency').value = state.settings.notificationFrequency;
-    }
-
-    // Initialize heatmap
-    function initializeHeatMap() {
-        elements.heatMap.innerHTML = '';
-        for (let i = 0; i < 10; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'heatmap-cell';
-            cell.textContent = i;
-            cell.id = `heat-cell-${i}`;
-            cell.setAttribute('data-count', '0');
-            cell.style.backgroundColor = 'rgba(0, 240, 255, 0.1)';
-            elements.heatMap.appendChild(cell);
-        }
-    }
-
-    // Start the periodic update cycle
-    function startUpdateCycle() {
-        // Clear any existing interval
-        if (state.timerInterval) {
-            clearInterval(state.timerInterval);
-        }
-
-        // Immediate update
-        updateData();
-
-        // Set up periodic updates (every 10 seconds)
-        state.timerInterval = setInterval(updateData, 2200);
-    }
-
-    // Main update function
-    async function updateData() {
-        if (state.isFetching) return;
-        state.isFetching = true;
-        updateSystemStatus('updating', 'Synchronizing with quantum interface...');
-        elements.loadingSpinner.style.display = 'block';
-        clearMessages();
-
-        try {
-            // Fetch the latest data
-            const [emerData, gameIssueData] = await Promise.all([
-                fetchNoAverageEmerdList(),
-                fetchGameIssue()
-            ]);
-
-            // Process the data
-            if (emerData && emerData.data && emerData.data.list && emerData.data.list.length > 0) {
-                updateDataTable(emerData.data.list);
-                processNewData(emerData.data.list);
-                elements.dataStatus.textContent = `Synced ${emerData.data.list.length} new records`;
-            } else {
-                showWarning('No new data available from quantum interface');
-            }
-
-            if (gameIssueData && gameIssueData.data) {
-                updateTimer(gameIssueData.data.endTime);
-            } else {
-                showWarning('Could not sync with time server');
-            }
-
-            updateUI();
-            updateSystemStatus('operational', 'System operational - predictions active');
-            showSuccess('Data synchronized successfully');
-        } catch (error) {
-            updateSystemStatus('error', 'Data synchronization failed');
-            showError('Data synchronization failed: ' + error.message);
-            console.error('Update error:', error);
-        } finally {
-            state.isFetching = false;
-            elements.loadingSpinner.style.display = 'none';
-        }
-    }
-
-    // Update the data table with new results
-    function updateDataTable(dataList) {
-        elements.tableBody.innerHTML = '';
-        dataList.forEach(item => {
-            const numberCategory = categorizeNumber(Number(item.number));
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${item.issueNumber}</td>
-                <td>${item.number} (${numberCategory})</td>
-                <td>${item.colour || '--'}</td>
-                <td>${item.premium || '--'}</td>
-                <td>${new Date().toLocaleTimeString()}</td>
-            `;
-            elements.tableBody.appendChild(row);
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSettings();
+            initializeCharts();
+            fetchCurrentGameIssue(); // Initial fetch
+            startCountdown();
+            updateNumberGrid();
+            setupDarkModeToggle();
         });
-    }
-
-    // Process new data and update predictions
-    function processNewData(dataList) {
-        const latestItem = dataList[0];
-        const latestIssue = latestItem.issueNumber;
-        const latestActual = Number(latestItem.number);
-        const actualCategory = categorizeNumber(latestActual);
-
-        // Update heatmap counts
-        state.heatMapNumbers[latestActual]++;
-        updateHeatMap();
-
-        // Check if we have a new issue
-        if (!state.lastPrediction || state.lastPrediction.issueNumber !== latestIssue) {
-            // If we had a previous prediction, record its accuracy
-            if (state.lastPrediction) {
-                const isCorrect = state.lastPrediction.category === actualCategory;
+        
+        // Show server content based on selection
+        function showServer(server) {
+            // Update active button
+            document.getElementById('server1-btn').classList.remove('active');
+            document.getElementById('server2-btn').classList.remove('active');
+            document.getElementById(`${server}-btn`).classList.add('active');
+            
+            // Show selected server content
+            document.getElementById('server1-container').style.display = 'none';
+            document.getElementById('server2-container').style.display = 'none';
+            document.getElementById(`${server}-container`).style.display = 'block';
+        }
+        
+        // Reconnect to server
+        function reconnectServer() {
+            showNotification('Reconnecting to server...', 'info');
+            document.getElementById('server-status').className = "text-yellow-400";
+            document.getElementById('server-status').innerHTML = '<i class="fas fa-circle"></i> Reconnecting...';
+            
+            // Simulate reconnection
+            setTimeout(() => {
+                fetchCurrentGameIssue();
+            }, 2000);
+        }
+        
+        // Open external website
+        function openWebsite(url) {
+            window.open(url, '_blank');
+        }
+        
+        // Load settings from localStorage
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('vascoSettings');
+            if (savedSettings) {
+                settings = JSON.parse(savedSettings);
+                updateSettingsUI();
+            }
+        }
+        
+        // Save settings to localStorage
+        function saveSettings() {
+            localStorage.setItem('vascoSettings', JSON.stringify(settings));
+            updateSettingsUI();
+        }
+        
+        // Update settings UI based on current settings
+        function updateSettingsUI() {
+            document.getElementById('win-notifications').checked = settings.winNotifications;
+            document.getElementById('loss-notifications').checked = settings.lossNotifications;
+            document.getElementById('sound-effects').checked = settings.soundEffects;
+            document.getElementById('vibration').checked = settings.vibration;
+            document.getElementById('advanced-stats').checked = settings.advancedStats;
+            document.getElementById('auto-refresh').checked = settings.autoRefresh;
+            document.getElementById('hot-cold-numbers').checked = settings.hotColdNumbers;
+            document.getElementById('auto-bet').checked = settings.autoBet;
+            document.getElementById('bet-amount').value = settings.betAmount;
+            applyTheme(settings.theme);
+            applyDarkMode(settings.darkMode);
+        }
+        
+        // Toggle settings panel
+        function toggleSettings() {
+            document.getElementById('settings-panel').classList.toggle('open');
+        }
+        
+        // Close settings panel
+        function closeSettings() {
+            document.getElementById('settings-panel').classList.remove('open');
+            
+            // Save settings when panel is closed
+            settings.winNotifications = document.getElementById('win-notifications').checked;
+            settings.lossNotifications = document.getElementById('loss-notifications').checked;
+            settings.soundEffects = document.getElementById('sound-effects').checked;
+            settings.vibration = document.getElementById('vibration').checked;
+            settings.advancedStats = document.getElementById('advanced-stats').checked;
+            settings.autoRefresh = document.getElementById('auto-refresh').checked;
+            settings.hotColdNumbers = document.getElementById('hot-cold-numbers').checked;
+            settings.autoBet = document.getElementById('auto-bet').checked;
+            settings.betAmount = parseInt(document.getElementById('bet-amount').value) || 100;
+            
+            saveSettings();
+        }
+        
+        // Change theme
+        function changeTheme(theme) {
+            settings.theme = theme;
+            saveSettings();
+            applyTheme(theme);
+        }
+        
+        // Apply theme to the app
+        function applyTheme(theme) {
+            // Remove all theme classes first
+            document.body.classList.remove(
+                'theme-purple', 'theme-blue', 'theme-green', 'theme-red'
+            );
+            
+            if (theme !== 'default') {
+                document.body.classList.add(`theme-${theme}`);
+            }
+        }
+        
+        // Setup dark mode toggle
+        function setupDarkModeToggle() {
+            const toggle = document.getElementById('dark-mode-toggle');
+            toggle.addEventListener('click', toggleDarkMode);
+            
+            // Set initial icon
+            updateDarkModeIcon();
+        }
+        
+        // Toggle dark mode
+        function toggleDarkMode() {
+            settings.darkMode = !settings.darkMode;
+            saveSettings();
+            applyDarkMode(settings.darkMode);
+            updateDarkModeIcon();
+        }
+        
+        // Apply dark mode
+        function applyDarkMode(enabled) {
+            if (enabled) {
+                document.body.style.background = 'linear-gradient(135deg, #0a0a0a, #1a1a1a)';
+                document.body.style.color = '#ffffff';
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #f5f5f5, #e5e5e5)';
+                document.body.style.color = '#333333';
+            }
+        }
+        
+        // Update dark mode icon
+        function updateDarkModeIcon() {
+            const icon = document.querySelector('#dark-mode-toggle i');
+            if (settings.darkMode) {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        }
+        
+        // Open VIP modal
+        function openModal() {
+            document.getElementById('vip-modal').style.display = 'flex';
+        }
+        
+        // Close VIP modal
+        function closeModal() {
+            document.getElementById('vip-modal').style.display = 'none';
+        }
+        
+        // Subscribe to VIP
+        function subscribeVIP() {
+    showNotification('Loading VIP subscription page...', 'info');
+    setTimeout(() => {
+        closeModal(); // Close the current modal if needed
+        
+        // Create a new modal or container for the iframe
+        const iframeContainer = document.createElement('div');
+        iframeContainer.innerHTML = `
+            <iframe 
+                src="https://media-hosting.imagekit.io/5e84ebba487345be/1000247289.jpg?Expires=1838863098&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=YaX3ko3fyC1SnNB6P87WarYkXZLqrriZ5mAaSQ-rvecsHQD1lb0EigILxTOsqdmRSiCNsDLu~pHcyDPqL2X~~NVLvjPB6Gq7sHjHfQhC-QaTRxlyXrNR-5nCxY3PIihdoCq3eQLr2cG54CH9b0avlNBbQbQ6GKpZrYq7u5v5Q0NWSTaqi3vmkc8pFKkjcQ~bqDQfZYr4JFY04ULqJSmHyqWOR59q7TLNNwsHubcgpfEV-w6DJQ-ayNwnBkIQ9rSAw8umfJrsu3kA-VCDzeCnQsPDgfHpXv-4-O2stljtz1Nve~gZq3-AoUIRGqrhiWIWSSn08n25Q96~Sc8yvGYTuQ__" 
+                width="100%" 
+                height="500px" 
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
+            <button onclick="this.parentElement.remove()">Close</button>
+        `;
+        document.body.appendChild(iframeContainer);
+    }, 2000);
+}
+        
+        // Switch between tabs
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Activate selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Activate tab button
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                if (tab.textContent.toLowerCase().includes(tabName)) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Update charts if analytics tab is selected
+            if (tabName === 'analytics') {
+                updateCharts();
+            }
+        }
+        
+        // Change strategy for a server
+        function changeStrategy(server, strategy) {
+            // Update active button
+            const buttons = document.querySelectorAll(`.${server} .strategy-btn`);
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(strategy)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Update prediction based on new strategy
+            if (previousResults.length > 0) {
+                updateResults();
+            }
+            
+            showNotification(`${server.toUpperCase()} strategy changed to ${strategy}`, 'info');
+        }
+        
+        // Initialize all charts
+        function initializeCharts() {
+            initializePerformanceChart();
+            initializeBigSmallChart();
+            initializeColorChart();
+            initializeNumberFrequencyChart();
+        }
+        
+        // Initialize performance chart
+        function initializePerformanceChart() {
+            const ctx = document.getElementById('performance-chart').getContext('2d');
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Server 1 Accuracy',
+                            data: [],
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Server 2 Accuracy',
+                            data: [],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: settings.darkMode ? '#ffffff' : '#333333'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: settings.darkMode ? '#ffffff' : '#333333'
+                            },
+                            grid: {
+                                color: settings.darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: settings.darkMode ? '#ffffff' : '#333333'
+                            },
+                            grid: {
+                                color: settings.darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize big/small chart
+        function initializeBigSmallChart() {
+            const ctx = document.getElementById('big-small-chart').getContext('2d');
+            bigSmallChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Big', 'Small'],
+                    datasets: [{
+                        label: 'Accuracy',
+                        data: [0, 0],
+                        backgroundColor: [
+                            'rgba(79, 70, 229, 0.7)',
+                            'rgba(234, 179, 8, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(79, 70, 229, 1)',
+                            'rgba(234, 179, 8, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: settings.darkMode ? '#ffffff' : '#333333'
+                            },
+                            grid: {
+                                color: settings.darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: settings.darkMode ? '#ffffff' : '#333333'
+                            },
+                            grid: {
+                                color: settings.darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize color chart
+        function initializeColorChart() {
+            const ctx = document.getElementById('color-chart').getContext('2d');
+            colorChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Green', 'Red'],
+                    datasets: [{
+                        label: 'Accuracy',
+                        data: [0, 0],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(239, 68, 68, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(239, 68, 68, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: settings.darkMode ? '#ffffff' : '#333333'
+                            },
+                            grid: {
+                                color: settings.darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: settings.darkMode ? '#ffffff' : '#333333'
+                            },
+                            grid: {
+                                color: settings.darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize number frequency chart
+        function initializeNumberFrequencyChart() {
+            const ctx = document.getElementById('number-frequency-chart').getContext('2d');
+            numberFrequencyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Array.from({length: 10}, (_, i) => i.toString()),
+                    datasets: [{
+                        label: 'Frequency',
+                        data: Array(10).fill(0),
+                        backgroundColor: Array(10).fill().map((_, i) => 
+                            [1, 3, 5, 7, 9].includes(i) ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
+                        ),
+                        borderColor: Array(10).fill().map((_, i) => 
+                            [1, 3, 5, 7, 9].includes(i) ? 'rgba(16, 185, 129, 1)' : 'rgba(239, 68, 68, 1)'
+                        ),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: settings.darkMode ? '#ffffff' : '#333333'
+                            },
+                            grid: {
+                                color: settings.darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: settings.darkMode ? '#ffffff' : '#333333'
+                            },
+                            grid: {
+                                color: settings.darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update all charts
+        function updateCharts() {
+            updatePerformanceChart();
+            updateBigSmallChart();
+            updateColorChart();
+            updateNumberFrequencyChart();
+        }
+        
+        // Update performance chart
+        function updatePerformanceChart() {
+            if (!performanceChart) return;
+            
+            // Get last 10 history entries
+            const recentHistory = history.slice(0, 10).reverse();
+            const labels = recentHistory.map(entry => `#${entry.period.slice(-4)}`);
+            const server1Accuracy = [];
+            const server2Accuracy = [];
+            
+            // Calculate cumulative accuracy for both servers
+            let server1Correct = 0, server1Total = 0;
+            let server2Correct = 0, server2Total = 0;
+            
+            for (let i = 0; i < recentHistory.length; i++) {
+                const entry = recentHistory[i];
+                if (entry.status === 'PENDING') continue;
                 
-                // Update streak
-                if (isCorrect) {
-                    state.currentStreak++;
-                    addNotification('Prediction Correct', 
-                        `Successfully predicted ${state.lastPrediction.category} for issue ${latestIssue}`, 
-                        'success');
+                const actualNumber = previousResults[0].number; // Most recent result
+                
+                // Check Server 1 (SMALL/BIG) prediction
+                if (entry.server1Prediction) {
+                    server1Total++;
+                    const isBig = actualNumber >= 5;
+                    if ((entry.server1Prediction === 'BIG' && isBig) || 
+                        (entry.server1Prediction === 'SMALL' && !isBig)) {
+                        server1Correct++;
+                    }
+                }
+                
+                // Check Server 2 (GREEN/RED) prediction
+                if (entry.server2Prediction) {
+                    server2Total++;
+                    const isGreen = [1, 3, 5, 7, 9].includes(actualNumber);
+                    if ((entry.server2Prediction === 'GREEN' && isGreen) || 
+                        (entry.server2Prediction === 'RED' && !isGreen)) {
+                        server2Correct++;
+                    }
+                }
+                
+                // Calculate accuracy rates
+                const server1Rate = server1Total > 0 ? (server1Correct / server1Total) * 100 : 0;
+                const server2Rate = server2Total > 0 ? (server2Correct / server2Total) * 100 : 0;
+                
+                server1Accuracy.push(server1Rate);
+                server2Accuracy.push(server2Rate);
+            }
+            
+            // Update chart data
+            performanceChart.data.labels = labels;
+            performanceChart.data.datasets[0].data = server1Accuracy;
+            performanceChart.data.datasets[1].data = server2Accuracy;
+            performanceChart.update();
+        }
+        
+        // Update big/small chart
+        function updateBigSmallChart() {
+            if (!bigSmallChart) return;
+            
+            let bigCorrect = 0, bigTotal = 0;
+            let smallCorrect = 0, smallTotal = 0;
+            
+            // Skip the first (pending) entry
+            for (let i = 1; i < history.length; i++) {
+                const entry = history[i];
+                if (entry.status === 'PENDING') continue;
+                
+                const actualNumber = previousResults[0].number; // Most recent result
+                
+                // Check Server 1 (SMALL/BIG) prediction
+                if (entry.server1Prediction) {
+                    if (entry.server1Prediction === 'BIG') {
+                        bigTotal++;
+                        if (actualNumber >= 5) bigCorrect++;
+                    } else if (entry.server1Prediction === 'SMALL') {
+                        smallTotal++;
+                        if (actualNumber <= 4) smallCorrect++;
+                    }
+                }
+            }
+            
+            // Update chart data
+            bigSmallChart.data.datasets[0].data = [
+                bigTotal > 0 ? (bigCorrect / bigTotal) * 100 : 0,
+                smallTotal > 0 ? (smallCorrect / smallTotal) * 100 : 0
+            ];
+            bigSmallChart.update();
+        }
+        
+        // Update color chart
+        function updateColorChart() {
+            if (!colorChart) return;
+            
+            let greenCorrect = 0, greenTotal = 0;
+            let redCorrect = 0, redTotal = 0;
+            
+            // Skip the first (pending) entry
+            for (let i = 1; i < history.length; i++) {
+                const entry = history[i];
+                if (entry.status === 'PENDING') continue;
+                
+                const actualNumber = previousResults[0].number; // Most recent result
+                
+                // Check Server 2 (GREEN/RED) prediction
+                if (entry.server2Prediction) {
+                    if (entry.server2Prediction === 'GREEN') {
+                        greenTotal++;
+                        if ([1, 3, 5, 7, 9].includes(actualNumber)) greenCorrect++;
+                    } else if (entry.server2Prediction === 'RED') {
+                        redTotal++;
+                        if ([0, 2, 4, 6, 8].includes(actualNumber)) redCorrect++;
+                    }
+                }
+            }
+            
+            // Update chart data
+            colorChart.data.datasets[0].data = [
+                greenTotal > 0 ? (greenCorrect / greenTotal) * 100 : 0,
+                redTotal > 0 ? (redCorrect / redTotal) * 100 : 0
+            ];
+            colorChart.update();
+        }
+        
+        // Update number frequency chart
+        function updateNumberFrequencyChart() {
+            if (!numberFrequencyChart || previousResults.length === 0) return;
+            
+            // Count frequency of each number in last 50 results
+            const frequency = Array(10).fill(0);
+            const recentResults = previousResults.slice(0, 50);
+            
+            recentResults.forEach(result => {
+                const num = parseInt(result.number);
+                if (num >= 0 && num <= 9) {
+                    frequency[num]++;
+                }
+            });
+            
+            // Update chart data
+            numberFrequencyChart.data.datasets[0].data = frequency;
+            numberFrequencyChart.update();
+            
+            // Also update the number grid with hot/cold indicators
+            updateNumberGrid();
+        }
+        
+        // Update number grid with hot/cold indicators
+        function updateNumberGrid() {
+            if (previousResults.length === 0) return;
+            
+            const grid = document.getElementById('number-grid');
+            grid.innerHTML = '';
+            
+            // Count frequency of each number in last 20 results
+            const frequency = Array(10).fill(0);
+            const recentResults = previousResults.slice(0, 20);
+            
+            recentResults.forEach(result => {
+                const num = parseInt(result.number);
+                if (num >= 0 && num <= 9) {
+                    frequency[num]++;
+                }
+            });
+            
+            // Determine hot (above average) and cold (below average) numbers
+            const avgFrequency = recentResults.length / 10;
+            const hotNumbers = [];
+            const coldNumbers = [];
+            
+            frequency.forEach((count, num) => {
+                if (count > avgFrequency * 1.5) {
+                    hotNumbers.push(num);
+                } else if (count < avgFrequency * 0.5) {
+                    coldNumbers.push(num);
+                }
+            });
+            
+            // Create number cells
+            for (let i = 0; i < 10; i++) {
+                const cell = document.createElement('div');
+                cell.className = `number-cell ${[1, 3, 5, 7, 9].includes(i) ? 'green' : 'red'}`;
+                cell.textContent = i;
+                
+                // Add hot/cold indicators if enabled
+                if (settings.hotColdNumbers) {
+                    if (hotNumbers.includes(i)) {
+                        cell.classList.add('hot');
+                    } else if (coldNumbers.includes(i)) {
+                        cell.classList.add('cold');
+                    }
+                }
+                
+                grid.appendChild(cell);
+            }
+        }
+        
+        // Start countdown timer
+        function startCountdown() {
+            let seconds = 5;
+            updateCountdown(seconds);
+            
+            countdownInterval = setInterval(() => {
+                seconds--;
+                updateCountdown(seconds);
+                
+                if (seconds <= 0) {
+                    seconds = 5;
+                    if (settings.autoRefresh) {
+                        fetchCurrentGameIssue();
+                    }
+                }
+            }, 1000);
+        }
+        
+        // Update countdown display
+        function updateCountdown(seconds) {
+            document.getElementById('countdown').textContent = `Next update in: ${seconds}s`;
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            // Set color based on type
+            if (type === 'success') {
+                notification.style.background = 'rgba(0, 255, 0, 0.8)';
+            } else if (type === 'error') {
+                notification.style.background = 'rgba(255, 0, 0, 0.8)';
+            } else {
+                notification.style.background = 'rgba(0, 0, 0, 0.8)';
+            }
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+            
+            // Play sound if enabled
+            if (settings.soundEffects) {
+                playSound(type);
+            }
+            
+            // Vibrate if enabled
+            if (settings.vibration && navigator.vibrate) {
+                if (type === 'success') {
+                    navigator.vibrate([200, 100, 200]);
+                } else if (type === 'error') {
+                    navigator.vibrate([500]);
                 } else {
-                    state.currentStreak = 0;
-                    addNotification('Prediction Incorrect', 
-                        `Predicted ${state.lastPrediction.category} but got ${actualCategory} for issue ${latestIssue}`, 
-                        'error');
+                    navigator.vibrate([200]);
                 }
-
-                const newHistoryEntry = {
-                    issueNumber: latestIssue,
-                    predictedNumber: state.lastPrediction.number,
-                    predictedCategory: state.lastPrediction.category,
-                    actualNumber: latestActual,
-                    actualCategory: actualCategory,
-                    result: isCorrect ? '🏆' : '💥',
-                    timestamp: new Date().toISOString()
-                };
-
-                state.predictionHistory.unshift(newHistoryEntry);
-                
-                // Keep only the last 100 entries to prevent memory issues
-                if (state.predictionHistory.length > 100) {
-                    state.predictionHistory = state.predictionHistory.slice(0, 100);
-                }
-
-                localStorage.setItem('predictionHistory', JSON.stringify(state.predictionHistory));
-                updateStats();
-                updatePatternAnalysis();
-                updateTrendAnalysis();
-            }
-
-            // Generate a new prediction
-            state.currentPrediction = generatePrediction();
-            state.currentPrediction.issueNumber = latestIssue;
-            localStorage.setItem('currentPrediction', JSON.stringify(state.currentPrediction));
-
-            // Update last prediction reference
-            state.lastPrediction = {
-                issueNumber: latestIssue,
-                number: state.currentPrediction.number,
-                category: state.currentPrediction.category
-            };
-            localStorage.setItem('lastPrediction', JSON.stringify(state.lastPrediction));
-            
-            // Add notification for new prediction
-            addNotification('New Prediction Generated', 
-                `Predicted ${state.currentPrediction.category} (${state.currentPrediction.number}) for next issue with ${state.currentPrediction.confidence}% confidence`, 
-                'info');
-        }
-    }
-
-    // Update the timer display
-    function updateTimer(endTime) {
-        const endDate = new Date(endTime);
-        const now = new Date();
-        const remainingTimeMs = endDate - now;
-
-        if (remainingTimeMs <= 0) {
-            elements.timer.textContent = "00:00:00";
-            // Trigger an immediate update when time runs out
-            setTimeout(updateData, 2100);
-        } else {
-            const hours = String(Math.floor(remainingTimeMs / 3600000)).padStart(2, '0');
-            const minutes = String(Math.floor((remainingTimeMs % 3600000) / 60000)).padStart(2, '0');
-            const seconds = String(Math.floor((remainingTimeMs % 60000) / 1000)).padStart(2, '0');
-            elements.timer.textContent = `${hours}:${minutes}:${seconds}`;
-        }
-    }
-
-    // Update the UI with current data
-    function updateUI() {
-        // Update prediction display
-        if (state.currentPrediction) {
-            elements.predictedNumber.textContent = state.currentPrediction.number;
-            elements.predictionCategory.textContent = `BUY: ${state.currentPrediction.category}`;
-            elements.confidenceValue.textContent = `${state.currentPrediction.confidence}%`;
-            elements.confidenceLevel.style.width = `${state.currentPrediction.confidence}%`;
-        } else {
-            elements.predictedNumber.textContent = '--';
-            elements.predictionCategory.textContent = 'Category: --';
-            elements.confidenceValue.textContent = '--%';
-            elements.confidenceLevel.style.width = '0%';
-        }
-
-        // Update history table
-        updatePredictionHistoryTable();
-    }
-
-    // Update system status display
-    function updateSystemStatus(status, message) {
-        state.systemStatus = status;
-        
-        const statusClasses = {
-            'initializing': 'warning',
-            'loading': 'warning',
-            'updating': 'warning',
-            'operational': 'active',
-            'error': 'error'
-        };
-        
-        // Clear all classes
-        elements.systemStatusIcon.className = 'status-icon';
-        // Add appropriate class
-        elements.systemStatusIcon.classList.add(statusClasses[status] || 'warning');
-        
-        elements.systemStatusText.textContent = message || 'System status unknown';
-    }
-
-    // Update the stats display
-    function updateStats() {
-        elements.totalPredictions.textContent = state.predictionHistory.length;
-        elements.currentStreak.textContent = state.currentStreak;
-        
-        if (state.predictionHistory.length > 0) {
-            const correctPredictions = state.predictionHistory.filter(entry => entry.result === '🏆').length;
-            const accuracy = Math.round((correctPredictions / state.predictionHistory.length) * 100);
-            elements.accuracyRate.textContent = `${accuracy}%`;
-            
-            if (state.predictionHistory[0]) {
-                elements.lastResult.textContent = state.predictionHistory[0].result;
-            }
-        } else {
-            elements.accuracyRate.textContent = '0%';
-            elements.lastResult.textContent = '--';
-        }
-    }
-
-    // Update pattern analysis display
-    function updatePatternAnalysis() {
-        if (state.predictionHistory.length === 0) return;
-        
-        // Track patterns for visualization
-        const recentResults = state.predictionHistory.slice(0, 20);
-        const smallCount = recentResults.filter(entry => entry.actualNumber <= 4).length;
-        const bigCount = recentResults.filter(entry => entry.actualNumber >= 5).length;
-        const total = smallCount + bigCount;
-        
-        const smallPercent = Math.round((smallCount / total) * 100);
-        const bigPercent = Math.round((bigCount / total) * 100);
-        
-        elements.smallPatternBar.style.width = `${smallPercent}%`;
-        elements.smallPatternBar.textContent = smallPercent >= 10 ? `Small ${smallPercent}%` : '';
-        elements.bigPatternBar.style.width = `${bigPercent}%`;
-        elements.bigPatternBar.textContent = bigPercent >= 10 ? `Big ${bigPercent}%` : '';
-        
-        // Update pattern indicator
-        if (smallPercent > 60) {
-            elements.patternIndicator.textContent = 'SMALL ▲';
-            elements.patternIndicator.className = 'prediction-value trend-up';
-            elements.patternStrength.textContent = `Strength: ${smallPercent}%`;
-        } else if (bigPercent > 60) {
-            elements.patternIndicator.textContent = 'BIG ▲';
-            elements.patternIndicator.className = 'prediction-value trend-up';
-            elements.patternStrength.textContent = `Strength: ${bigPercent}%`;
-        } else {
-            elements.patternIndicator.textContent = 'Mixed ➝';
-            elements.patternIndicator.className = 'prediction-value trend-neutral';
-            elements.patternStrength.textContent = 'Strength: Balanced';
-        }
-        
-        // Save pattern for trend analysis
-        if (state.patternHistory.length >= 5) {
-            state.patternHistory.shift();
-        }
-        state.patternHistory.push(smallPercent);
-    }
-
-    // Update trend analysis display
-    function updateTrendAnalysis() {
-        if (state.patternHistory.length < 3) {
-            elements.trendIndicator.textContent = '--';
-            elements.trendStrength.textContent = 'Momentum: --';
-            elements.trendDuration.textContent = 'Duration: --';
-            return;
-        }
-        
-        // Calculate trend direction and momentum
-        const trendDirection = state.patternHistory[0] < state.patternHistory[state.patternHistory.length - 1] ? 'Up' : 'Down';
-        const trendMomentum = Math.abs(state.patternHistory[0] - state.patternHistory[state.patternHistory.length - 1]);
-        
-        // Determine trend duration
-        let duration = 'Short-term';
-        if (state.patternHistory.length >= 5) {
-            const consistentTrend = state.patternHistory.every((val, i, arr) => 
-                i === 0 || (trendDirection === 'Up' ? val >= arr[i-1] : val <= arr[i-1]));
-            if (consistentTrend) {
-                duration = 'Long-term';
             }
         }
         
-        // Update UI
-        if (trendDirection === 'Up') {
-            elements.trendIndicator.textContent = 'SMALL ▲';
-            elements.trendIndicator.className = 'prediction-value trend-up';
-        } else {
-            elements.trendIndicator.textContent = 'BIG ▲';
-            elements.trendIndicator.className = 'prediction-value trend-up';
-        }
-        
-        elements.trendStrength.textContent = `Momentum: ${trendMomentum.toFixed(1)}%`;
-        elements.trendDuration.textContent = `Duration: ${duration}`;
-    }
-
-    // Update heatmap display
-    function updateHeatMap() {
-        // Find max count for normalization
-        const maxCount = Math.max(...state.heatMapNumbers);
-        
-        // Update heatmap cells
-        for (let i = 0; i < 10; i++) {
-            const cell = document.getElementById(`heat-cell-${i}`);
-            if (!cell) continue;
-            
-            const count = state.heatMapNumbers[i];
-            cell.setAttribute('data-count', count);
-            const intensity = maxCount > 0 ? (count / maxCount) : 0;
-            
-            // Set color based on intensity
-            if (intensity > 0.7) {
-                cell.style.backgroundColor = `rgba(255, 50, 50, ${0.3 + intensity * 0.7})`;
-            } else if (intensity > 0.4) {
-                cell.style.backgroundColor = `rgba(255, 165, 0, ${0.3 + intensity * 0.7})`;
+        // Play sound effect
+        function playSound(type) {
+            const audio = new Audio();
+            if (type === 'success') {
+                audio.src = 'https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3';
+            } else if (type === 'error') {
+                audio.src = 'https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3';
             } else {
-                cell.style.backgroundColor = `rgba(0, 240, 255, ${0.1 + intensity * 0.7})`;
+                audio.src = 'https://assets.mixkit.co/sfx/preview/mixkit-modern-click-box-check-1120.mp3';
+            }
+            audio.play();
+        }
+        
+        // Robot Message Function
+        function showRobotMessage(message, isWin) {
+            if ((isWin && !settings.winNotifications) || (!isWin && !settings.lossNotifications)) {
+                return;
+            }
+            
+            const robotMessage = document.getElementById('robot-message');
+            const robotIcon = document.getElementById('robot-icon');
+
+            // Update message and icon
+            robotMessage.textContent = message;
+            robotMessage.style.display = 'block';
+            robotIcon.textContent = isWin ? '👑' : '😢'; // Smile for win, sad for loss
+
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                robotMessage.style.display = 'none';
+                robotIcon.textContent = '⚙️'; // Reset to settings icon
+            }, 5000);
+            
+            // Play sound if enabled
+            if (settings.soundEffects) {
+                playSound(isWin ? 'success' : 'error');
+            }
+            
+            // Vibrate if enabled
+            if (settings.vibration && navigator.vibrate) {
+                if (isWin) {
+                    navigator.vibrate([200, 100, 200]);
+                } else {
+                    navigator.vibrate([500]);
+                }
             }
         }
-    }
-
-    // Update the prediction history table
-    function updatePredictionHistoryTable() {
-        elements.historyTableBody.innerHTML = '';
         
-        if (state.predictionHistory.length === 0) {
-            const row = document.createElement('tr');
-            row.innerHTML = '<td colspan="5">No prediction history available</td>';
-            elements.historyTableBody.appendChild(row);
-            return;
-        }
-
-        const start = state.currentPage * state.itemsPerPage;
-        const end = start + state.itemsPerPage;
-        const paginatedHistory = state.predictionHistory.slice(start, end);
-
-        paginatedHistory.forEach(entry => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${entry.issueNumber}</td>
-                <td>${entry.predictedNumber} (${entry.predictedCategory})</td>
-                <td>${entry.actualNumber} (${entry.actualCategory})</td>
-                <td style="color: ${entry.result === '🏆' ? 'var(--matrix-green)' : 'var(--error-red)'}">${entry.result}</td>
-                <td>${new Date(entry.timestamp).toLocaleTimeString()}</td>
-            `;
-            elements.historyTableBody.appendChild(row);
-        });
-
-        // Update pagination buttons
-        elements.prevPageButton.disabled = state.currentPage === 0 || state.predictionHistory.length === 0;
-        elements.nextPageButton.disabled = end >= state.predictionHistory.length || state.predictionHistory.length === 0;
-    }
-
-    // Generate a new prediction
-    function generatePrediction() {
-        let prediction;
-        
-        switch(state.settings.algorithmType) {
-            case 'basic':
-                prediction = generateBasicPrediction();
-                break;
-            case 'quantum':
-                prediction = generateQuantumPrediction();
-                break;
-            case 'hybrid':
-                prediction = generateHybridPrediction();
-                break;
-            case 'advanced':
-            default:
-                prediction = generateAdvancedPrediction();
-                break;
-        }
-        
-        return prediction;
-    }
-
-    // Basic prediction algorithm (simple random)
-    function generateBasicPrediction() {
-        const predictedNumber = Math.floor(Math.random() * 10);
-        return { 
-            number: predictedNumber, 
-            category: categorizeNumber(predictedNumber),
-            confidence: Math.floor(Math.random() * 30) + 50 // 50-80%
-        };
-    }
-
-    // Advanced prediction algorithm (history-based)
-    function generateAdvancedPrediction() {
-        if (state.predictionHistory.length === 0) {
-            return generateBasicPrediction();
-        }
-        
-        const smallCount = state.predictionHistory.filter(entry => entry.actualNumber <= 4).length;
-        const bigCount = state.predictionHistory.filter(entry => entry.actualNumber >= 5).length;
-        
-        const total = smallCount + bigCount;
-        const smallProbability = total ? (smallCount / total) : 0.5;
-        
-        // Add weighted randomness based on settings
-        const randomFactor = (Math.random() * state.settings.randomnessFactor / 50) - (state.settings.randomnessFactor / 100);
-        const adjustedProbability = Math.max(0.1, Math.min(0.9, smallProbability + randomFactor));
-        
-        // Generate number with weighted probability
-        const predictedNumber = Math.random() < adjustedProbability ? 
-            Math.floor(Math.random() * 5) : // Small number (0-4)
-            Math.floor(Math.random() * 5) + 5; // Big number (5-9)
+        // Place a bet (simulated)
+        function placeBet(type) {
+            let betAmount = settings.betAmount;
+            let betType = '';
             
-        return { 
-            number: predictedNumber, 
-            category: categorizeNumber(predictedNumber),
-            confidence: Math.round(adjustedProbability * 100)
-        };
-    }
-
-    // Quantum simulation prediction (more complex pattern recognition)
-    function generateQuantumPrediction() {
-        if (state.predictionHistory.length < 5) {
-            return generateAdvancedPrediction();
-        }
-        
-        // Analyze recent patterns
-        const recentResults = state.predictionHistory.slice(0, 10);
-        const smallCount = recentResults.filter(entry => entry.actualNumber <= 4).length;
-        const bigCount = recentResults.filter(entry => entry.actualNumber >= 5).length;
-        
-        // Calculate probabilities with momentum
-        const smallProbability = (smallCount / recentResults.length) * 1.2; // Slight bias towards continuing trend
-        const bigProbability = (bigCount / recentResults.length) * 1.2;
-        
-        // Normalize probabilities
-        const total = smallProbability + bigProbability;
-        const normalizedSmall = smallProbability / total;
-        
-        // Add randomness based on settings
-        const randomFactor = (Math.random() * state.settings.randomnessFactor / 100) - (state.settings.randomnessFactor / 200);
-        const adjustedProbability = Math.max(0.1, Math.min(0.9, normalizedSmall + randomFactor));
-        
-        // Generate prediction
-        const predictedNumber = Math.random() < adjustedProbability ? 
-            Math.floor(Math.random() * 5) : // Small number (0-4)
-            Math.floor(Math.random() * 5) + 5; // Big number (5-9)
+            switch(type) {
+                case 'green':
+                    betType = 'GREEN';
+                    break;
+                case 'red':
+                    betType = 'RED';
+                    break;
+                case 'big':
+                    betType = 'BIG';
+                    break;
+                case 'small':
+                    betType = 'SMALL';
+                    break;
+            }
             
-        return { 
-            number: predictedNumber, 
-            category: categorizeNumber(predictedNumber),
-            confidence: Math.round(adjustedProbability * 100)
-        };
-    }
-
-    // Hybrid prediction algorithm (combines multiple approaches)
-    function generateHybridPrediction() {
-        const basicPred = generateBasicPrediction();
-        const advancedPred = generateAdvancedPrediction();
-        const quantumPred = generateQuantumPrediction();
-        
-        // Weighted average based on history weight setting
-        const historyWeight = state.settings.historyWeight / 100;
-        const confidence = Math.round(
-            (quantumPred.confidence * historyWeight) + 
-            (advancedPred.confidence * (1 - historyWeight) * 0.7) + 
-            (basicPred.confidence * (1 - historyWeight) * 0.3)
-        );
-        
-        // Decide which prediction to use based on confidence
-        if (quantumPred.confidence >= 70) {
-            return { ...quantumPred, confidence };
-        } else if (advancedPred.confidence >= 60) {
-            return { ...advancedPred, confidence };
-        } else {
-            return { ...basicPred, confidence };
+            showNotification(`Placed ${betAmount} on ${betType}`, 'info');
+            
+            // Simulate auto-bet on high confidence
+            if (settings.autoBet) {
+                const confidence = type === 'big' || type === 'small' 
+                    ? parseInt(document.getElementById('server1-confidence-value').textContent) 
+                    : parseInt(document.getElementById('server2-confidence-value').textContent);
+                
+                if (confidence > 70) {
+                    setTimeout(() => {
+                        showNotification(`Auto-bet placed ${betAmount * 2} on ${betType} (High Confidence)`, 'success');
+                    }, 1000);
+                }
+            }
         }
-    }
-
-    // Categorize numbers as Small (0-4) or Big (5-9)
-    function categorizeNumber(number) {
-        return (number >= 0 && number <= 4) ? 'SMALL':'BIG';
         
-    }
+        // Export data
+        function exportData(format) {
+            let dataStr, fileName;
+            
+            if (format === 'csv') {
+                // Convert to CSV
+                let csv = 'Period,Server1,Server2,Result\n';
+                history.forEach(entry => {
+                    csv += `${entry.period},${entry.server1Prediction || '-'},${entry.server2Prediction || '-'},${entry.status}\n`;
+                });
+                
+                dataStr = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+                fileName = 'vasco-predictions.csv';
+            } else {
+                // Convert to JSON
+                const json = JSON.stringify(history, null, 2);
+                dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(json);
+                fileName = 'vasco-predictions.json';
+            }
+            
+            // Create download link
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute('href', dataStr);
+            downloadAnchor.setAttribute('download', fileName);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            document.body.removeChild(downloadAnchor);
+            
+            showNotification(`Exported data as ${format.toUpperCase()}`, 'success');
+        }
+        
+        // Fetch Current Game Issue
+        async function fetchCurrentGameIssue() {
+            const apiUrl = 'https://api.bdg88zf.com/api/webapi/GetGameIssue';
+            const requestData = {
+                typeId: 1,
+                language: 0,
+                random: "40079dcba93a48769c6ee9d4d4fae23f",
+                signature: "D12108C4F57C549D82B23A91E0FA20AE",
+                timestamp: 1727792520,
+            };
 
-    // API fetch functions with error handling
-    async function fetchNoAverageEmerdList() {
-        try {
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    },
+                    body: JSON.stringify(requestData),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.code === 0) {
+                        const currentPeriod = data.data.issueNumber;
+                        if (currentPeriod !== latestPeriod) {
+                            latestPeriod = currentPeriod;
+                            document.getElementById('period-number').textContent = latestPeriod.toString().slice(-17);
+                            fetchPreviousResults();
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("❌ Fetch error:", error);
+                showNotification('Failed to fetch current game data', 'error');
+                document.getElementById('server-status').className = "text-red-400";
+                document.getElementById('server-status').innerHTML = '<i class="fas fa-circle"></i> Disconnected';
+            }
+        }
+
+        // Fetch Previous Results
+        async function fetchPreviousResults() {
+            const apiUrl = 'https://api.bdg88zf.com/api/webapi/GetNoaverageEmerdList';
             const requestData = {
                 pageSize: 10,
                 pageNo: 1,
                 typeId: 1,
                 language: 0,
-                random: "ded40537a2ce416e96c00e5218f6859a",
-                signature: "69306982EEEB19FA940D72EC93C62552",
-                timestamp: Math.floor(Date.now() / 1000)
+                random: "c2505d9138da4e3780b2c2b34f2fb789",
+                signature: "7D637E060DA35C0C6E28DC6D23D71BED",
+                timestamp: 1727792520,
             };
 
-            const response = await fetch('https://api.bdg88zf.com/api/webapi/GetNoaverageEmerdList', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8',
-                    'Accept': 'application/json, text/plain, */*'
-                },
-                body: JSON.stringify(requestData)
-            });
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    },
+                    body: JSON.stringify(requestData),
+                });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.code === 0 && data.data.list.length > 0) {
+                        previousResults = data.data.list;
+                        updateResults();
+                        updateRecentResultsDisplay();
+                        document.getElementById('server-status').className = "text-green-400";
+                        document.getElementById('server-status').innerHTML = '<i class="fas fa-circle"></i> Connected';
+                    }
+                }
+            } catch (error) {
+                console.error("❌ Fetch error:", error);
+                showNotification('Failed to fetch historical data', 'error');
             }
-
-            return await response.json();
-        } catch (error) {
-            console.error('Error fetching no average EMERD list:', error);
-            throw error;
         }
-    }
 
-    async function fetchGameIssue() {
-        try {
-            const requestData = {
-                typeId: 1,
-                language: 0,
-                random: "f8dcb5c527814db68800e3946a2b60e8",
-                signature: "08CF7FF3339ED58D4743F4B650FCBEA9",
-                timestamp: Math.floor(Date.now() / 1000)
+        // Update Results with New Prediction Logic
+        function updateResults() {
+            if (previousResults.length > 0) {
+                const results = previousResults.map(entry => ({ number: parseInt(entry.number) }));
+
+                // Analyze last 10 results for streaks
+                const recentNumbers = results.slice(0, 10);
+                
+                // SERVER 1: SMALL/BIG PREDICTION
+                const lastTenBigSmall = recentNumbers.map(entry => (entry.number >= 0 && entry.number <= 4) ? 'SMALL' : 'BIG');
+                let bigStreak = 0, smallStreak = 0;
+                let currentBigSmallStreak = null;
+
+                lastTenBigSmall.forEach(bs => {
+                    if (bs === currentBigSmallStreak) {
+                        if (bs === 'BIG') bigStreak++;
+                        else smallStreak++;
+                    } else {
+                        currentBigSmallStreak = bs;
+                        bigStreak = (bs === 'BIG') ? 1 : 0;
+                        smallStreak = (bs === 'SMALL') ? 1 : 0;
+                    }
+                });
+
+                // Generate Server 1 prediction
+                let server1Prediction, server1Confidence;
+                const bigFrequency = recentNumbers.filter(entry => entry.number >= 5).length;
+                
+                // Check active strategy for server1
+                const server1Strategy = document.querySelector('.server1 .strategy-btn.active').textContent.toLowerCase();
+                
+                if (server1Strategy === 'streak') {
+                    // Streak-based strategy
+                    server1Prediction = (bigStreak >= 3) ? 'SMALL' : (smallStreak >= 3) ? 'BIG' :
+                        (bigFrequency >= 6) ? 'SMALL' : 'BIG';
+                    server1Confidence = Math.min(30 + Math.max(bigStreak, smallStreak) * 15, 90);
+                } else if (server1Strategy === 'frequency') {
+                    // Frequency-based strategy
+                    server1Prediction = (bigFrequency >= 6) ? 'SMALL' : 'BIG';
+                    server1Confidence = Math.min(50 + Math.abs(bigFrequency - 5) * 10, 90);
+                } else {
+                    // Neural strategy (simulated)
+                    server1Prediction = Math.random() > 0.5 ? 'BIG' : 'SMALL';
+                    server1Confidence = Math.floor(65 + Math.random() * 30);
+                }
+                
+                // Update Server 1 UI
+                document.getElementById('server1-prediction').textContent = server1Prediction;
+                document.getElementById('server1-prediction').className = `server-prediction ${
+                    server1Prediction === 'BIG' ? 'text-blue-400' : 'text-yellow-400'
+                }`;
+                
+                // Update confidence meter
+                document.getElementById('server1-confidence').style.width = `${server1Confidence}%`;
+                document.getElementById('server1-confidence-value').textContent = `${server1Confidence}%`;
+                
+                // Update AI prediction text
+                let aiText1;
+                if (server1Strategy === 'streak') {
+                    aiText1 = `Streak analysis indicates ${server1Confidence}% confidence for ${server1Prediction} (${bigStreak} BIG / ${smallStreak} SMALL streak)`;
+                } else if (server1Strategy === 'frequency') {
+                    aiText1 = `Frequency analysis shows ${bigFrequency}/10 BIG numbers (${server1Confidence}% confidence for ${server1Prediction})`;
+                } else {
+                    aiText1 = `Neural network predicts ${server1Confidence}% probability for ${server1Prediction} based on pattern recognition`;
+                }
+                document.getElementById('server1-ai-prediction').textContent = aiText1;
+                
+                // Update Server 1 pattern
+                updatePatternIndicators('server1', lastTenBigSmall);
+                
+                // SERVER 2: GREEN/RED PREDICTION
+                const lastTenColors = recentNumbers.map(entry => ([1, 3, 5, 7, 9].includes(entry.number)) ? 'GREEN' : 'RED');
+                let greenStreak = 0, redStreak = 0;
+                let currentColorStreak = null;
+
+                lastTenColors.forEach(color => {
+                    if (color === currentColorStreak) {
+                        if (color === 'GREEN') greenStreak++;
+                        else redStreak++;
+                    } else {
+                        currentColorStreak = color;
+                        greenStreak = (color === 'GREEN') ? 1 : 0;
+                        redStreak = (color === 'RED') ? 1 : 0;
+                    }
+                });
+
+                // Generate Server 2 prediction
+                let server2Prediction, server2Confidence;
+                const greenFrequency = lastTenColors.filter(color => color === 'GREEN').length;
+                
+                // Check active strategy for server2
+                const server2Strategy = document.querySelector('.server2 .strategy-btn.active').textContent.toLowerCase();
+                
+                if (server2Strategy === 'streak') {
+                    // Streak-based strategy
+                    server2Prediction = (greenStreak >= 3) ? 'RED' : (redStreak >= 3) ? 'GREEN' :
+                        (greenFrequency >= 6) ? 'RED' : 'GREEN';
+                    server2Confidence = Math.min(30 + Math.max(greenStreak, redStreak) * 15, 90);
+                } else if (server2Strategy === 'frequency') {
+                    // Frequency-based strategy
+                    server2Prediction = (greenFrequency >= 6) ? 'RED' : 'GREEN';
+                    server2Confidence = Math.min(50 + Math.abs(greenFrequency - 5) * 10, 90);
+                } else {
+                    // Neural strategy (simulated)
+                    server2Prediction = Math.random() > 0.5 ? 'GREEN' : 'RED';
+                    server2Confidence = Math.floor(65 + Math.random() * 30);
+                }
+                
+                // Update Server 2 UI
+                document.getElementById('server2-prediction').textContent = server2Prediction;
+                document.getElementById('server2-prediction').className = `server-prediction ${
+                    server2Prediction === 'GREEN' ? 'text-green-400' : 'text-red-400'
+                }`;
+                
+                // Update confidence meter
+                document.getElementById('server2-confidence').style.width = `${server2Confidence}%`;
+                document.getElementById('server2-confidence-value').textContent = `${server2Confidence}%`;
+                
+                // Update AI prediction text
+                let aiText2;
+                if (server2Strategy === 'streak') {
+                    aiText2 = `Streak analysis indicates ${server2Confidence}% confidence for ${server2Prediction} (${greenStreak} GREEN / ${redStreak} RED streak)`;
+                } else if (server2Strategy === 'frequency') {
+                    aiText2 = `Frequency analysis shows ${greenFrequency}/10 GREEN numbers (${server2Confidence}% confidence for ${server2Prediction})`;
+                } else {
+                    aiText2 = `Neural network predicts ${server2Confidence}% probability for ${server2Prediction} based on pattern recognition`;
+                }
+                document.getElementById('server2-ai-prediction').textContent = aiText2;
+                
+                // Update Server 2 pattern
+                updatePatternIndicators('server2', lastTenColors);
+                
+                // Update history with new predictions
+                updateHistory(server1Prediction, server2Prediction);
+                
+                // Update accuracy stats
+                updateAccuracyStats();
+                
+                // Update charts
+                updateCharts();
+            }
+        }
+        
+        // Update pattern indicators for a server
+        function updatePatternIndicators(server, pattern) {
+            const patternEl = document.getElementById(`${server}-pattern`);
+            patternEl.innerHTML = '';
+            
+            // Add dots for current pattern (last 5 results)
+            pattern.slice(0, 5).forEach(item => {
+                const dot = document.createElement('div');
+                dot.className = 'pattern-dot';
+                
+                if (server === 'server1') {
+                    if (item === 'BIG') dot.classList.add('active');
+                } else {
+                    if (item === 'GREEN') dot.classList.add('active');
+                }
+                
+                patternEl.appendChild(dot);
+            });
+        }
+        
+        // Update accuracy statistics
+        function updateAccuracyStats() {
+            if (history.length < 2) return;
+            
+            let bigCorrect = 0, bigTotal = 0;
+            let smallCorrect = 0, smallTotal = 0;
+            let greenCorrect = 0, greenTotal = 0;
+            let redCorrect = 0, redTotal = 0;
+            
+            // Skip the first (pending) entry
+            for (let i = 1; i < history.length; i++) {
+                const entry = history[i];
+                if (entry.status === 'PENDING') continue;
+                
+                const actualNumber = previousResults[0].number; // Most recent result
+                
+                // Check Server 1 (SMALL/BIG) prediction
+                if (entry.server1Prediction) {
+                    if (entry.server1Prediction === 'BIG') {
+                        bigTotal++;
+                        if (actualNumber >= 5) bigCorrect++;
+                    } else if (entry.server1Prediction === 'SMALL') {
+                        smallTotal++;
+                        if (actualNumber <= 4) smallCorrect++;
+                    }
+                }
+                
+                // Check Server 2 (GREEN/RED) prediction
+                if (entry.server2Prediction) {
+                    if (entry.server2Prediction === 'GREEN') {
+                        greenTotal++;
+                        if ([1, 3, 5, 7, 9].includes(actualNumber)) greenCorrect++;
+                    } else if (entry.server2Prediction === 'RED') {
+                        redTotal++;
+                        if ([0, 2, 4, 6, 8].includes(actualNumber)) redCorrect++;
+                    }
+                }
+            }
+            
+            // Update UI
+            document.getElementById('big-accuracy').textContent = bigTotal > 0 ? `${Math.round((bigCorrect / bigTotal) * 100)}%` : '0%';
+            document.getElementById('small-accuracy').textContent = smallTotal > 0 ? `${Math.round((smallCorrect / smallTotal) * 100)}%` : '0%';
+            document.getElementById('green-accuracy').textContent = greenTotal > 0 ? `${Math.round((greenCorrect / greenTotal) * 100)}%` : '0%';
+            document.getElementById('red-accuracy').textContent = redTotal > 0 ? `${Math.round((redCorrect / redTotal) * 100)}%` : '0%';
+            
+            // Update progress bars
+            const server1Accuracy = (bigTotal + smallTotal) > 0 ? 
+                ((bigCorrect + smallCorrect) / (bigTotal + smallTotal)) * 100 : 0;
+            const server2Accuracy = (greenTotal + redTotal) > 0 ? 
+                ((greenCorrect + redCorrect) / (greenTotal + redTotal)) * 100 : 0;
+                
+            document.getElementById('server1-progress').style.width = `${server1Accuracy}%`;
+            document.getElementById('server2-progress').style.width = `${server2Accuracy}%`;
+            
+            // Update performance rating
+            updatePerformanceRating(server1Accuracy, server2Accuracy);
+        }
+        
+        // Update performance rating badge
+        function updatePerformanceRating(server1Accuracy, server2Accuracy) {
+            const avgAccuracy = (server1Accuracy + server2Accuracy) / 2;
+            const badge = document.getElementById('performance-rating');
+            
+            // Remove all badge classes
+            badge.className = 'performance-badge';
+            
+            if (avgAccuracy >= 80) {
+                badge.textContent = 'Excellent';
+                badge.classList.add('badge-excellent');
+            } else if (avgAccuracy >= 70) {
+                badge.textContent = 'Good';
+                badge.classList.add('badge-good');
+            } else if (avgAccuracy >= 60) {
+                badge.textContent = 'Average';
+                badge.classList.add('badge-average');
+            } else if (avgAccuracy >= 50) {
+                badge.textContent = 'Poor';
+                badge.classList.add('badge-poor');
+            } else {
+                badge.textContent = 'Bad';
+                badge.classList.add('badge-bad');
+            }
+        }
+        
+        // Update recent results display
+        function updateRecentResultsDisplay() {
+            const recentResultsContainer = document.getElementById('recent-results');
+            recentResultsContainer.innerHTML = '';
+            
+            // Show last 5 results
+            const resultsToShow = previousResults.slice(0, 5);
+            
+            resultsToShow.forEach(result => {
+                const num = parseInt(result.number);
+                const isBig = num >= 5;
+                const isGreen = [1, 3, 5, 7, 9].includes(num);
+                
+                const resultEl = document.createElement('div');
+                resultEl.className = `w-10 h-10 rounded-full flex items-center justify-center font-bold ${isGreen ? 'bg-green-500' : 'bg-red-500'}`;
+                resultEl.textContent = num;
+                resultEl.title = `Period: ${result.issueNumber}\nResult: ${num} (${isBig ? 'BIG' : 'SMALL'} ${isGreen ? 'GREEN' : 'RED'})`;
+                
+                recentResultsContainer.appendChild(resultEl);
+            });
+        }
+
+        // Update History with server predictions
+        function updateHistory(server1Prediction, server2Prediction) {
+            const historyContainer = document.getElementById('history-list');
+            historyContainer.innerHTML = '';
+
+            const newHistoryEntry = {
+                period: latestPeriod.toString().slice(-17),
+                server1Prediction: server1Prediction,
+                server2Prediction: server2Prediction,
+                status: "PENDING"
             };
 
-            const response = await fetch('https://api.bdg88zf.com/api/webapi/GetGameIssue', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8',
-                    'Accept': 'application/json, text/plain, */*'
-                },
-                body: JSON.stringify(requestData)
-            });
+            // Add new entry to history
+            history.unshift(newHistoryEntry);
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            // Update previous entry status
+            if (history.length > 1 && previousResults.length > 0) {
+                const prevEntry = history[1];
+                const actualNumber = previousResults[0].number;
+                const actualBigSmall = actualNumber <= 4 ? 'SMALL' : 'BIG';
+                const actualColor = [1, 3, 5, 7, 9].includes(actualNumber) ? 'GREEN' : 'RED';
+
+                // Check if either server prediction was correct
+                const server1Correct = prevEntry.server1Prediction === actualBigSmall;
+                const server2Correct = prevEntry.server2Prediction === actualColor;
+                
+                prevEntry.status = (server1Correct || server2Correct) ? "WIN" : "LOSS";
+
+                // Show robot message for win/loss
+                if (prevEntry.status === "WIN") {
+                    if (server1Correct && server2Correct) {
+                        showRobotMessage(`🎉 Both servers correct! ${actualBigSmall}/${actualColor}`, true);
+                    } else if (server1Correct) {
+                        showRobotMessage(`🎉 Server 1 correct! ${actualBigSmall}`, true);
+                    } else if (server2Correct) {
+                        showRobotMessage(`🎉 Server 2 correct! ${actualColor}`, true);
+                    }
+                } else if (prevEntry.status === "LOSS") {
+                    showRobotMessage(`😢 Loss! Actual: ${actualBigSmall}/${actualColor}`, false);
+                }
+                
+                // Update current streak display
+                updateCurrentStreak();
             }
 
-            return await response.json();
-        } catch (error) {
-            console.error('Error fetching game issue:', error);
-            throw error;
-        }
-    }
+            // Keep only the last 100 entries
+            if (history.length > 100) {
+                history = history.slice(0, 100);
+            }
 
-    // Message display functions
-    function clearMessages() {
-        elements.errorMessage.textContent = '';
-        elements.warningMessage.textContent = '';
-        elements.successMessage.textContent = '';
-        elements.infoMessage.textContent = '';
-    }
+            // Display history
+            let winCount = 0,
+                lossCount = 0;
+            history.forEach((entry) => {
+                const box = document.createElement('div');
+                box.className = "history-box bg-gray-800 p-3 rounded-lg grid grid-cols-4 gap-2 items-center";
+                
+                // Period
+                const periodEl = document.createElement('div');
+                periodEl.className = "text-gray-300";
+                periodEl.innerHTML = `<span class="font-bold text-white">#${entry.period.slice(-4)}</span>`;
+                
+                // Server 1 Prediction
+                const server1El = document.createElement('div');
+                server1El.className = "text-center";
+                if (entry.server1Prediction) {
+                    server1El.innerHTML = `<span class="${entry.server1Prediction === 'BIG' ? 'text-blue-400' : 'text-yellow-400'} font-bold">${entry.server1Prediction}</span>`;
+                } else {
+                    server1El.textContent = '-';
+                }
+                
+                // Server 2 Prediction
+                const server2El = document.createElement('div');
+                server2El.className = "text-center";
+                if (entry.server2Prediction) {
+                    server2El.innerHTML = `<span class="${entry.server2Prediction === 'GREEN' ? 'text-green-400' : 'text-red-400'} font-bold">${entry.server2Prediction}</span>`;
+                } else {
+                    server2El.textContent = '-';
+                }
+                
+                // Status
+                const statusEl = document.createElement('div');
+                statusEl.className = `font-bold text-center ${entry.status === 'WIN' ? 'text-green-400' : entry.status === 'LOSS' ? 'text-red-400' : 'text-yellow-400'}`;
+                statusEl.textContent = entry.status;
+                
+                // Append all elements to the box
+                box.appendChild(periodEl);
+                box.appendChild(server1El);
+                box.appendChild(server2El);
+                box.appendChild(statusEl);
+                
+                historyContainer.appendChild(box);
 
-    function showError(message) {
-        elements.errorMessage.textContent = message;
-        console.error(message);
-        addNotification('System Error', message, 'error');
-    }
+                if (entry.status === "WIN") winCount++;
+                else if (entry.status === "LOSS") lossCount++;
+            });
 
-    function showWarning(message) {
-        elements.warningMessage.textContent = message;
-        console.warn(message);
-        setTimeout(() => elements.warningMessage.textContent = '', 5000);
-        addNotification('System Warning', message, 'warning');
-    }
-
-    function showSuccess(message) {
-        elements.successMessage.textContent = message;
-        console.log(message);
-        setTimeout(() => elements.successMessage.textContent = '', 5000);
-        addNotification('System Update', message, 'success');
-    }
-
-    function showInfo(message) {
-        elements.infoMessage.textContent = message;
-        console.log(message);
-        setTimeout(() => elements.infoMessage.textContent = '', 5000);
-        addNotification('System Info', message, 'info');
-    }
-
-    // Notification system
-    function addNotification(title, message, type) {
-        // Check notification frequency setting
-        if (state.settings.notificationFrequency === 'none' || 
-            (state.settings.notificationFrequency === 'important' && type === 'info')) {
-            return;
-        }
-
-        const newNotification = {
-            id: Date.now(),
-            title,
-            message,
-            type,
-            timestamp: new Date().toISOString(),
-            read: false
-        };
-        
-        state.notifications.unshift(newNotification);
-        
-        // Keep only the last 20 notifications
-        if (state.notifications.length > 20) {
-            state.notifications = state.notifications.slice(0, 20);
+            // Update analysis section
+            document.getElementById('won-count').textContent = winCount;
+            document.getElementById('lost-count').textContent = lossCount;
+            const winPercentage = (winCount + lossCount > 0) ? ((winCount / (winCount + lossCount)) * 100).toFixed(2) : 0;
+            document.getElementById('won-percentage').textContent = `${winPercentage}%`;
+            
+            // Update chart if analytics tab is active
+            if (document.getElementById('analytics-tab').classList.contains('active')) {
+                updateCharts();
+            }
         }
         
-        // Save to localStorage
-        localStorage.setItem('notifications', JSON.stringify(state.notifications));
-        
-        // Update UI
-        updateNotificationBadge();
-        
-        // Play sound if enabled
-        if (state.settings.sound) {
-            playNotificationSound(type);
+        // Update current streak display
+        function updateCurrentStreak() {
+            if (history.length < 2) {
+                document.getElementById('current-streak').textContent = '0';
+                return;
+            }
+            
+            let streak = 0;
+            let isWinningStreak = history[1].status === 'WIN';
+            
+            for (let i = 1; i < history.length; i++) {
+                if (history[i].status === (isWinningStreak ? 'WIN' : 'LOSS')) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            
+            document.getElementById('current-streak').textContent = streak;
+            document.getElementById('current-streak').className = `text-xl font-bold ${
+                isWinningStreak ? 'text-green-400' : 'text-red-400'
+            }`;
         }
-        
-        // Vibrate if enabled
-        if (state.settings.vibration && navigator.vibrate) {
-            navigator.vibrate(type === 'error' ? [200, 100, 200] : [200]);
-        }
-    }
 
-    function playNotificationSound(type) {
-        // In a real app, you would play actual sounds here
-        console.log(`Playing ${type} notification sound`);
-    }
-
-    function updateNotificationBadge() {
-        const unreadCount = state.notifications.filter(n => !n.read).length;
-        elements.notificationBadge.textContent = unreadCount;
-        elements.notificationBadge.style.display = unreadCount > 0 ? 'flex' : 'none';
-    }
-
-    function updateNotificationList() {
-        elements.notificationList.innerHTML = '';
-        
-        if (state.notifications.length === 0) {
-            elements.notificationList.innerHTML = '<div class="notification-item">No notifications</div>';
-            return;
-        }
-        
-        state.notifications.forEach(notification => {
-            const item = document.createElement('div');
-            item.className = `notification-item ${notification.type}`;
-            item.innerHTML = `
-                <div class="notification-title">
-                    <i class="fas fa-${getNotificationIcon(notification.type)}"></i>
-                    ${notification.title}
-                </div>
-                <div class="notification-message">${notification.message}</div>
-                <div class="notification-time">${new Date(notification.timestamp).toLocaleTimeString()}</div>
-            `;
-            elements.notificationList.appendChild(item);
-        });
-        
-        // Mark all as read when panel is opened
-        state.notifications.forEach(n => n.read = true);
-        localStorage.setItem('notifications', JSON.stringify(state.notifications));
-        updateNotificationBadge();
-    }
-
-    function getNotificationIcon(type) {
-        switch(type) {
-            case 'error': return 'exclamation-circle';
-            case 'warning': return 'exclamation-triangle';
-            case 'success': return 'check-circle';
-            case 'info': 
-            default: return 'info-circle';
-        }
-    }
-
-    // Export data as CSV
-    function exportData() {
-        if (state.predictionHistory.length === 0) {
-            showWarning('No data available to export');
-            return;
-        }
-        
-        // Prepare CSV content
-        let csvContent = "Issue,Predicted Number,Predicted Category,Actual Number,Actual Category,Result,Timestamp\n";
-        
-        state.predictionHistory.forEach(entry => {
-            csvContent += `"${entry.issueNumber}","${entry.predictedNumber}","${entry.predictedCategory}","${entry.actualNumber}","${entry.actualCategory}","${entry.result}","${entry.timestamp}"\n`;
-        });
-        
-        // Create download link
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', `quantum_ai_predictions_${new Date().toISOString().slice(0, 10)}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        showSuccess('Data exported successfully');
-    }
-
-    // Event listeners
-    elements.prevPageButton.addEventListener('click', () => {
-        if (state.currentPage > 0) {
-            state.currentPage--;
-            updatePredictionHistoryTable();
-        }
-    });
-
-    elements.nextPageButton.addEventListener('click', () => {
-        if ((state.currentPage + 1) * state.itemsPerPage < state.predictionHistory.length) {
-            state.currentPage++;
-            updatePredictionHistoryTable();
-        }
-    });
-
-    elements.notificationBell.addEventListener('click', () => {
-        elements.notificationPanel.style.display = elements.notificationPanel.style.display === 'block' ? 'none' : 'block';
-        if (elements.notificationPanel.style.display === 'block') {
-            updateNotificationList();
-        }
-    });
-
-    elements.settingsButton.addEventListener('click', () => {
-        elements.settingsPanel.style.display = 'block';
-    });
-
-    elements.settingsClose.addEventListener('click', () => {
-        elements.settingsPanel.style.display = 'none';
-    });
-
-    elements.saveSettingsButton.addEventListener('click', () => {
-        // Save settings
-        state.settings = {
-            algorithmType: document.getElementById('algorithmType').value,
-            randomnessFactor: parseInt(document.getElementById('randomnessFactor').value),
-            historyWeight: parseInt(document.getElementById('historyWeight').value),
-            theme: document.getElementById('themeSelect').value,
-            animations: document.getElementById('animationsToggle').checked,
-            darkMode: document.getElementById('darkModeToggle').checked,
-            sound: document.getElementById('soundToggle').checked,
-            vibration: document.getElementById('vibrationToggle').checked,
-            notificationFrequency: document.getElementById('notificationFrequency').value
-        };
-        
-        localStorage.setItem('systemSettings', JSON.stringify(state.settings));
-        elements.settingsPanel.style.display = 'none';
-        showSuccess('Settings saved successfully');
-        
-        // Apply theme changes
-        applyTheme();
-    });
-
-    document.getElementById('randomnessFactor').addEventListener('input', (e) => {
-        document.getElementById('randomnessValue').textContent = e.target.value + '%';
-    });
-
-    document.getElementById('historyWeight').addEventListener('input', (e) => {
-        document.getElementById('historyWeightValue').textContent = e.target.value + '%';
-    });
-
-    elements.manualRefreshButton.addEventListener('click', () => {
-        updateData();
-    });
-
-    elements.exportDataButton.addEventListener('click', () => {
-        exportData();
-    });
-
-    elements.advancedAnalysisButton.addEventListener('click', () => {
-        showInfo('Advanced analysis feature coming in next update!');
-    });
-
-    // Close notifications when clicking outside
-    document.addEventListener('click', (event) => {
-        if (!elements.notificationBell.contains(event.target) && !elements.notificationPanel.contains(event.target)) {
-            elements.notificationPanel.style.display = 'none';
-        }
-        
-        if (!elements.settingsButton.contains(event.target) && !elements.settingsPanel.contains(event.target) && 
-            event.target !== elements.settingsPanel && !elements.settingsClose.contains(event.target)) {
-            elements.settingsPanel.style.display = 'none';
-        }
-    });
-
-    // Apply theme settings
-    function applyTheme() {
-        // In a real app, you would implement theme switching here
-        console.log('Applying theme:', state.settings.theme);
-    }
-
-    // Initialize the application
-    init();
-});
-</script>
+        // Auto-Fetch Every 5 Seconds
+        setInterval(fetchCurrentGameIssue, 5000);
+    </script>
 </body>
-</html>
+
+</html>                                          
